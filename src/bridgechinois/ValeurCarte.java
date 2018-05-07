@@ -24,9 +24,51 @@ public enum ValeurCarte {
     ROI(11),
     AS(12);
     
-    int valeur;
+    private int valeur;
     
     ValeurCarte(int valeur){
         this.valeur = valeur;
     } 
+    
+    /**
+     * 
+     * @return un entier représentant la valeur de la valeur.
+     */
+    public int getValeur(){
+        return valeur;
+    }
+    
+    @Override
+    public String toString(){
+        switch(this.getValeur()){
+            case 0:
+                return "2";
+            case 1:
+                return "3";
+            case 2:
+                return "4";
+            case 3:
+                return "5";
+            case 4:
+                return "6";
+            case 5:
+                return "7";
+            case 6:
+                return "8";
+            case 7:
+                return "9";
+            case 8:
+                return "10";
+            case 9:
+                return "Valet";
+            case 10:
+                return "Dame";
+            case 11:
+                return "Roi";
+            case 12:
+                return "As";
+            default:
+                throw new java.lang.Error("Erreur de valeur de carte : " + this.getValeur()); 
+        }
+    }
 }

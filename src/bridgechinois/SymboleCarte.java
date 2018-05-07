@@ -15,9 +15,34 @@ public enum SymboleCarte {
     COEUR(2),
     PIQUE(3);
     
-    int symbole;
+    private int symbole;
     
     SymboleCarte(int symbole){
         this.symbole = symbole;
-    }    
+    }   
+    
+    /**
+     * 
+     * @return un entier représentant la valeur du symbole
+     */
+    public int getSymbole(){
+        return this.symbole;
+    }
+    
+    @Override
+    public String toString(){
+        switch(this.getSymbole()){
+            case 0:
+                return "Trèfle";
+            case 1:
+                return "Carreau";
+            case 2:
+                return "Coeur";
+            case 3:
+                return "Pique";
+            default:
+                throw new java.lang.Error("Erreur de valeur de carte : " + this.getSymbole()); 
+        }
+    }
+    
 }
