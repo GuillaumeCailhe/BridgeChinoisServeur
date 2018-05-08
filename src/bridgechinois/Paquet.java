@@ -56,6 +56,17 @@ public class Paquet {
             throw new Error("Plus de cartes dans le paquet");
         }
     }
+    
+        
+    @Override
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("PAQUET: ");
+        for(Carte c : cartes){
+            sb.append(c + "; ");
+        }
+        return sb.toString();
+    }
    
     
 }
