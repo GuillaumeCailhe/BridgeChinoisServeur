@@ -16,7 +16,8 @@ public class MessageClient {
     CodeMessage code;
     Object donnees;
     
-    public MessageClient(DataInputStream fluxEntrant){
+    public MessageClient(CodeMessage code, DataInputStream fluxEntrant){
+        this.code = code;
     }
     
 }

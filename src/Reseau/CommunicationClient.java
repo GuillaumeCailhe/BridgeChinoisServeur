@@ -77,37 +77,37 @@ public class CommunicationClient {
         MessageClient msg;
         switch(code){
             case PSEUDO:
-                msg = new MessageClientString(fluxEntrant);
+                msg = new MessageClientString(code,fluxEntrant);
             case MAIN:
-                msg = new MessageClientEntier(fluxEntrant);
+                msg = new MessageClientEntier(code,fluxEntrant);
             case JOUER:
-                msg = new MessageClientEntier(fluxEntrant);
+                msg = new MessageClientEntier(code,fluxEntrant);
             case JOUER_OK:
-                msg = new MessageClient(fluxEntrant); 
+                msg = new MessageClient(code,fluxEntrant); 
             case JOUER_KO:
-                msg = new MessageClient(fluxEntrant); 
+                msg = new MessageClient(code,fluxEntrant); 
             case PIOCHER:
-                msg = new MessageClientEntier(fluxEntrant); 
+                msg = new MessageClientEntier(code,fluxEntrant); 
             case PIOCHER_OK:
-                msg = new MessageClient(fluxEntrant); 
+                msg = new MessageClient(code,fluxEntrant); 
             case PIOCHER_KO:
-                msg = new MessageClient(fluxEntrant); 
+                msg = new MessageClient(code,fluxEntrant); 
             case CAPITULER:
-                msg = new MessageClient(fluxEntrant); 
+                msg = new MessageClient(code,fluxEntrant); 
             case ANNULER:
-                msg = new MessageClient(fluxEntrant); 
+                msg = new MessageClient(code,fluxEntrant); 
             case SAUVEGARDER:
-                msg = new MessageClient(fluxEntrant); 
+                msg = new MessageClient(code,fluxEntrant); 
             case CHARGER:
-                msg = new MessageClient(fluxEntrant); 
+                msg = new MessageClient(code,fluxEntrant); 
             case VICTOIRE:
-                msg = new MessageClient(fluxEntrant); 
+                msg = new MessageClient(code,fluxEntrant); 
             case DEFAITE:
-                msg = new MessageClient(fluxEntrant); 
+                msg = new MessageClient(code,fluxEntrant); 
             case EGALITE:
-                msg = new MessageClient(fluxEntrant);   
+                msg = new MessageClient(code,fluxEntrant);   
             case MESSAGE_CHAT:
-                msg = new MessageClientString(fluxEntrant);      
+                msg = new MessageClientString(code,fluxEntrant);      
             default:
                 msg = null;
         }         

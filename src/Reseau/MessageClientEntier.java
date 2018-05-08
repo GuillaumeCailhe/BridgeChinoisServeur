@@ -13,8 +13,8 @@ import java.io.DataInputStream;
  */
 public class MessageClientEntier extends MessageClient {
     
-    public MessageClientEntier(DataInputStream fluxEntrant) {
-        super(fluxEntrant);
+    public MessageClientEntier(CodeMessage code, DataInputStream fluxEntrant) {
+        super(code,fluxEntrant);
     }
     
 }
