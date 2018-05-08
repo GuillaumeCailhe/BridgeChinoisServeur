@@ -28,8 +28,8 @@ public class Moteur implements Runnable{
     private int nbManches;
     private int mancheActuelle;
     
-    private Paire joueur1;
-    private Paire joueur2;
+    private Couple joueur1;
+    private Couple joueur2;
     
     private Piles piles;
     private ValeurCarte atout;
@@ -64,23 +64,23 @@ public class Moteur implements Runnable{
             case JOUEUR_CONTRE_JOUEUR:
                 int1 = new Intelligence(client1);
                 int2 = new Intelligence(client2);
-                joueur1 = new Paire(j1,int1);
-                joueur2 = new Paire(j2,int2);
+                joueur1 = new Couple(j1,int1);
+                joueur2 = new Couple(j2,int2);
             case JOUEUR_CONTRE_IA_FACILE:
                 int1 = new Intelligence(client1);
                 int2 = new Intelligence(new IAFacile());
-                joueur1 = new Paire(j1,int1);
-                joueur2 = new Paire(j2,int2);
+                joueur1 = new Couple(j1,int1);
+                joueur2 = new Couple(j2,int2);
             case JOUEUR_CONTRE_IA_INTERMEDIAIRE:
                 int1 = new Intelligence(client1);
                 int2 = new Intelligence(new IAIntermediaire());
-                joueur1 = new Paire(j1,int1);
-                joueur2 = new Paire(j2,int2);
+                joueur1 = new Couple(j1,int1);
+                joueur2 = new Couple(j2,int2);
             case JOUEUR_CONTRE_IA_DIFFICILE:
                 int1 = new Intelligence(client1);
                 int2 = new Intelligence(new IADifficile());
-                joueur1 = new Paire(j1,int1);
-                joueur2 = new Paire(j2,int2);
+                joueur1 = new Couple(j1,int1);
+                joueur2 = new Couple(j2,int2);
         }
 
     }

@@ -11,12 +11,10 @@ import java.io.DataInputStream;
  *
  * @author Pepefab
  */
-public class MessageClient {
+public class MessageClientEntier extends MessageClient {
     
-    CodeMessage code;
-    Object donnees;
-    
-    public MessageClient(DataInputStream fluxEntrant){
+    public MessageClientEntier(DataInputStream fluxEntrant) {
+        super(fluxEntrant);
     }
     
 }

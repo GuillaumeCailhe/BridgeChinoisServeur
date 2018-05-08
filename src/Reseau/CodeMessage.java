@@ -14,15 +14,18 @@ public enum CodeMessage {
     MAIN((byte) 1),
     JOUER((byte) 2),
     JOUER_OK((byte) 3),
-    PIOCHER((byte) 4),
-    PIOCHER_OK((byte) 5),
-    CAPITULER((byte) 6),
-    ANNULER((byte) 7),
-    SAUVEGARDER((byte) 8),
-    VICTOIRE((byte) 9),
-    DEFAITE((byte) 10),
-    EGALITE((byte) 11),
-    MESSAGE_CHAT((byte) 12);
+    JOUER_KO((byte) 4),
+    PIOCHER((byte) 5),
+    PIOCHER_OK((byte) 6),
+    PIOCHER_KO((byte) 7),
+    CAPITULER((byte) 8),
+    ANNULER((byte) 9),
+    SAUVEGARDER((byte) 10),
+    CHARGER((byte) 11),
+    VICTOIRE((byte) 12),
+    DEFAITE((byte) 13),
+    EGALITE((byte) 14),
+    MESSAGE_CHAT((byte) 15);
     
     private byte code;
 
