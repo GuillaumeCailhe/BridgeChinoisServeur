@@ -11,6 +11,7 @@ Instructions pour cloner sous Netbeans:
 6) Vérifier que "Scan for netbeans project after clone" soit coché.
 7) Finish
 8) Open project
+Si vous avez un problème avec Junit/hamcrest :
 9) Clic droit sur le projet -> properties -> libraries -> add library -> junit, refaire la même pour hamcrest.
 
 Trello :
