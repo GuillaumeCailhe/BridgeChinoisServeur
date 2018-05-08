@@ -21,7 +21,7 @@ import java.util.Stack;
  *
  * @author Pepefab
  */
-public class Moteur {
+public class Moteur implements Runnable{
 
     private ModeDeJeu mode;
     
@@ -89,6 +89,12 @@ public class Moteur {
         this(mode,nbManches,client1,null);
     }
 
+    @Override
+    public void run() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    
     public int getNbManches() {
         return nbManches;
     }
@@ -96,7 +102,8 @@ public class Moteur {
     public int getMancheActuelle() {
         return mancheActuelle;
     }
-    
+
+
     
     
 }
