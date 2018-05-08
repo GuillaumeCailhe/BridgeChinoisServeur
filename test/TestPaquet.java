@@ -4,10 +4,10 @@
  * and open the template in the editor.
  */
 
-import bridgechinois.Carte;
-import bridgechinois.Paquet;
-import bridgechinois.SymboleCarte;
-import bridgechinois.ValeurCarte;
+import Carte.Carte;
+import Carte.Paquet;
+import Carte.SymboleCarte;
+import Carte.ValeurCarte;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

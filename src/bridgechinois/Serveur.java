@@ -7,8 +7,15 @@ package bridgechinois;
 
 /**
  *
- * @author cailheg
+ * @author Pepefab
  */
 public class Serveur {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        
+    }
     
 }
