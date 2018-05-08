@@ -20,8 +20,15 @@ public class Moteur {
     Stack<Carte[]> historique; // Mon interprétation : un coup est représenté par 2 cartes jouées, je les gardent donc dans un tableau à 2 cartes.
     
     public Moteur(){
+        // Distribution des cartes
         Paquet paquet = new Paquet();
-        piles = new Piles(paquet);
+        this.piles = new Piles(paquet);
+        ArrayList<Carte> main1 = new ArrayList<Carte>();
+        ArrayList<Carte> main2 = new ArrayList<Carte>();
+        for(int i=0; i<11; i++){
+            main1.add(paquet.distribuerUneCarte());
+            main2.add(paquet.distribuerUneCarte());
+        }
     }
     
 }

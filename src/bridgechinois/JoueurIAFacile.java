@@ -5,10 +5,16 @@
  */
 package bridgechinois;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Pepefab
  */
 public class JoueurIAFacile extends JoueurIA {
+    
+    public JoueurIAFacile(String pseudo, ArrayList<Carte> main, Moteur moteur) {
+        super(pseudo, main, moteur);
+    }
     
 }
