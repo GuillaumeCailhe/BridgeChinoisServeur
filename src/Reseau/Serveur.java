@@ -21,7 +21,7 @@ public class Serveur {
         Socket clientEnAttente = null;
         
         ServerSocket socketServeur = new ServerSocket(31000);
-        socketServeur.setSoTimeout(10000);
+        socketServeur.setSoTimeout(0); // Pas de timeout sur l'accept
         
         while(true){
             Socket client = socketServeur.accept();

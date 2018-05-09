@@ -6,6 +6,7 @@
 package Reseau;
 
 import java.io.DataInputStream;
+import java.io.IOException;
 
 /**
  *
@@ -13,8 +14,15 @@ import java.io.DataInputStream;
  */
 public class MessageClientString extends MessageClient {
     
-    public MessageClientString(CodeMessage code, DataInputStream fluxEntrant) {
+    String donnees;
+    
+    public MessageClientString(CodeMessage code, DataInputStream fluxEntrant) throws IOException {
         super(code,fluxEntrant);
+        int taille = fluxEntrant.readByte();
+        donnees = "";
+        for(int i=0; i<taille; i++){
+            donnees += fluxEntrant.readChar();
+        }
     }
     
 }
