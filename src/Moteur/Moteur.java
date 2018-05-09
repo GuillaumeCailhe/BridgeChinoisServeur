@@ -9,7 +9,7 @@ import LibrairieCarte.ValeurCarte;
 import Carte.Piles;
 import Carte.Paquet;
 import Joueur.Joueur;
-import LibrairieReseau.CommunicationClient;
+import LibrairieReseau.Communication;
 import IA.IAFacile;
 import IA.IAIntermediaire;
 import IA.IADifficile;
@@ -37,7 +37,7 @@ public class Moteur implements Runnable{
     
     Stack<Carte[]> historique; // Mon interprétation : un coup est représenté par 2 cartes jouées, je les gardent donc dans un tableau à 2 cartes.
     
-    public Moteur(ModeDeJeu mode, int nbManches, CommunicationClient client1, CommunicationClient client2){
+    public Moteur(ModeDeJeu mode, int nbManches, Communication client1, Communication client2){
         this.mode = mode;
         this.nbManches = nbManches;
         this.mancheActuelle = 0;
@@ -85,7 +85,7 @@ public class Moteur implements Runnable{
 
     }
     
-    public Moteur(ModeDeJeu mode, int nbManches, CommunicationClient client1){
+    public Moteur(ModeDeJeu mode, int nbManches, Communication client1){
         this(mode,nbManches,client1,null);
     }
 

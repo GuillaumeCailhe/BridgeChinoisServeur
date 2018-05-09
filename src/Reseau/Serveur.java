@@ -5,7 +5,7 @@
  */
 package Reseau;
 
-import LibrairieReseau.CommunicationClient;
+import LibrairieReseau.Communication;
 import Moteur.ModeDeJeu;
 import Moteur.Moteur;
 import java.io.IOException;
@@ -28,7 +28,7 @@ public class Serveur {
             Socket client = socketServeur.accept();
             System.out.println("Nouveau joueur: " + client.getInetAddress());
             if(clientEnAttente != null){ // On lance la partie
-                Moteur moteur = new Moteur(ModeDeJeu.JOUEUR_CONTRE_JOUEUR, 2, new CommunicationClient(clientEnAttente), new CommunicationClient(client));
+                Moteur moteur = new Moteur(ModeDeJeu.JOUEUR_CONTRE_JOUEUR, 2, new Communication(clientEnAttente), new Communication(client));
                 Thread t = new Thread(moteur);
                 t.start();
             } else { // On met le joueur en attente

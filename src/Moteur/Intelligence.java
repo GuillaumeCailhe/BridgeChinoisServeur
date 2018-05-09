@@ -5,7 +5,7 @@
  */
 package Moteur;
 
-import LibrairieReseau.CommunicationClient;
+import LibrairieReseau.Communication;
 import IA.IA;
 
 /**
@@ -14,7 +14,7 @@ import IA.IA;
  */
 public class Intelligence {
     
-    public Intelligence(CommunicationClient client){
+    public Intelligence(Communication client){
         
     }
     
