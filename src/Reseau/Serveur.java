@@ -6,6 +6,7 @@
 package Reseau;
 
 import LibrairieReseau.Communication;
+import LibrairieReseau.Message;
 import Moteur.ModeDeJeu;
 import Moteur.Moteur;
 import java.io.IOException;
@@ -19,21 +20,19 @@ import java.net.Socket;
 public class Serveur {
     
     public Serveur() throws IOException{
-        Socket clientEnAttente = null;
-        
+        Lobby lobby = new Lobby();
+       
         ServerSocket socketServeur = new ServerSocket(31000);
         socketServeur.setSoTimeout(0); // Pas de timeout sur l'accept
         
         while(true){
-            Socket client = socketServeur.accept();
-            System.out.println("Nouveau joueur: " + client.getInetAddress());
-            if(clientEnAttente != null){ // On lance la partie
-                Moteur moteur = new Moteur(ModeDeJeu.JOUEUR_CONTRE_JOUEUR, 2, new Communication(clientEnAttente), new Communication(client));
-                Thread t = new Thread(moteur);
-                t.start();
-            } else { // On met le joueur en attente
-                clientEnAttente = client;
-            }
+            Communication client = new Communication(socketServeur.accept());
+            Thread t = new Thread(client);
+            t.start();
+            lobby.ajouterClient(client);
+            System.out.println("Nouveau joueur: " + client.getSocket().getInetAddress());
+            
+            
         }    
     }
     
