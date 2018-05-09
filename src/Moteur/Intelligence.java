@@ -5,7 +5,7 @@
  */
 package Moteur;
 
-import Reseau.CommunicationClient;
+import LibrairieReseau.CommunicationClient;
 import IA.IA;
 
 /**

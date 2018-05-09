@@ -5,6 +5,7 @@
  */
 package Reseau;
 
+import LibrairieReseau.CommunicationClient;
 import Moteur.ModeDeJeu;
 import Moteur.Moteur;
 import java.io.IOException;

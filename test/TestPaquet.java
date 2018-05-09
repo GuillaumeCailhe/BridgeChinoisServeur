@@ -4,10 +4,8 @@
  * and open the template in the editor.
  */
 
-import Carte.Carte;
 import Carte.Paquet;
-import Carte.SymboleCarte;
-import Carte.ValeurCarte;
+import LibrairieCarte.Carte;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

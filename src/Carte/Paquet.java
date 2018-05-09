@@ -5,7 +5,9 @@
  */
 package Carte;
 
-import Carte.Carte;
+import LibrairieCarte.Carte;
+import LibrairieCarte.SymboleCarte;
+import LibrairieCarte.ValeurCarte;
 import java.util.ArrayList;
 import java.util.Collections;
 

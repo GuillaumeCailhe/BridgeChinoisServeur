@@ -4,9 +4,9 @@
  * and open the template in the editor.
  */
 
-import Carte.Carte;
-import Carte.SymboleCarte;
-import Carte.ValeurCarte;
+import LibrairieCarte.Carte;
+import LibrairieCarte.SymboleCarte;
+import LibrairieCarte.ValeurCarte;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

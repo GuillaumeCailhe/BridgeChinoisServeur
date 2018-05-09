@@ -5,7 +5,7 @@
  */
 package Joueur;
 
-import Carte.Carte;
+import LibrairieCarte.Carte;
 import Moteur.Moteur;
 import java.util.ArrayList;
 

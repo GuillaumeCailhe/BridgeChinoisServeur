@@ -5,15 +5,15 @@
  */
 package Moteur;
 
-import Carte.ValeurCarte;
+import LibrairieCarte.ValeurCarte;
 import Carte.Piles;
 import Carte.Paquet;
 import Joueur.Joueur;
-import Reseau.CommunicationClient;
+import LibrairieReseau.CommunicationClient;
 import IA.IAFacile;
 import IA.IAIntermediaire;
 import IA.IADifficile;
-import Carte.Carte;
+import LibrairieCarte.Carte;
 import java.util.ArrayList;
 import java.util.Stack;
 
