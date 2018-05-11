@@ -5,8 +5,14 @@
  */
 package Reseau;
 
+import LibrairieReseau.CodeMessage;
 import LibrairieReseau.Communication;
+import Moteur.ModeDeJeu;
+import Moteur.Moteur;
+import java.io.IOException;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -31,24 +37,56 @@ public class Lobby implements Runnable{
     public void run() {
         // On parcours les clients en attentes et on regarde s'ils ont envoyé une requête de partie
         while(true){
-            for(Communication client : clientsDevantEtreTraites){
-                if(client.getMessage() != null){
-                    // PENSE A THREADER LE MOTEUR Thread t = new Thread(moteur); t.start();
-                    // Il faudra aussi modifier la façon dont le moteur s'initialise, passer le maximum de code du constructeur vers run()
-                    
-                    // Traiter la demande du client :
-                    //  si la demande est une requête de partie (sinon ejecter le client ?)
-                    //      si JcJ
-                    //          si clienEnAttente != null
-                    //              lancer partie
-                    //          sinon
-                    //              clientEnAttente = client
-                    //      Sinon si JCJ
-                    //          lancer partie
-                    //      Sinon si charger
-                    //          charger sauvegarde
+            boucle();
+        }
+    }
+    
+    private void boucle(){
+        Thread t;
+        Moteur moteur;
+        for(Communication client : clientsDevantEtreTraites){
+            if(client.getNbMessages() > 0){
+                switch(client.getMessage().getCode()){
+                    case PARTIE_JCJ:
+                        if(clientEnAttente == null){
+                            System.out.println("Un joueur demande de jouer, mais il est seul");
+                            clientEnAttente = client;
+                            clientsDevantEtreTraites.remove(client);
+                        } else {
+                            System.out.println("Deux joueurs veulent joeur, c'est parti !");
+                            // Nouvelle partie JCJ
+                            try {
+                                client.envoyer(CodeMessage.PARTIE_DEMARRER);
+                                clientEnAttente.envoyer(CodeMessage.PARTIE_DEMARRER);
+                                moteur = new Moteur(ModeDeJeu.JOUEUR_CONTRE_JOUEUR, 1, clientEnAttente, client);
+                                t = new Thread(moteur);
+                                t.start();
+                                clientsDevantEtreTraites.remove(client);
+                                clientsDevantEtreTraites.remove(clientEnAttente);
+                            } catch(IOException e){
+                                System.out.println("Erreur de communication avec les clients");
+                            }
+                        }
+                    case PARTIE_JCFACILE:
+                        moteur = new Moteur(ModeDeJeu.JOUEUR_CONTRE_IA_FACILE, 1, client);
+                        t = new Thread(moteur);
+                        t.start();                        
+                    case PARTIE_JCINTERMEDIAIRE:
+                        moteur = new Moteur(ModeDeJeu.JOUEUR_CONTRE_IA_INTERMEDIAIRE, 1, client);
+                        t = new Thread(moteur);
+                        t.start();                        
+                    case PARTIE_JCDIFFICILE:
+                        moteur = new Moteur(ModeDeJeu.JOUEUR_CONTRE_IA_DIFFICILE, 1, client);
+                        t = new Thread(moteur);
+                        t.start();
+                        // case PARTIE_CHARGER:
                 }
             }
+        }
+        try {
+            Thread.sleep(10);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

@@ -21,18 +21,18 @@ public class Serveur {
     
     public Serveur() throws IOException{
         Lobby lobby = new Lobby();
-       
+        Thread tlobby = new Thread(lobby);
+        tlobby.start();
+        
         ServerSocket socketServeur = new ServerSocket(31000);
         socketServeur.setSoTimeout(0); // Pas de timeout sur l'accept
         
         while(true){
             Communication client = new Communication(socketServeur.accept());
+            System.out.println("Nouveau joueur: " + client.getSocket().getInetAddress());
             Thread t = new Thread(client);
             t.start();
             lobby.ajouterClient(client);
-            System.out.println("Nouveau joueur: " + client.getSocket().getInetAddress());
-            
-            
         }    
     }
     
