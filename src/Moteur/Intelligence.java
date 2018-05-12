@@ -7,20 +7,28 @@ package Moteur;
 
 import LibrairieReseau.Communication;
 import IA.IA;
+import LibrairieCarte.Carte;
 
 /**
  *
  * @author Pepefab
  */
-public class Intelligence {
+public interface Intelligence {
     
-    public Intelligence(Communication client){
-        
-    }
-    
-    public Intelligence(IA ia){
-        
-    }
+    public int getCoup();
 
+    public int getPioche();
+    
+    public void avertirCoupAdversaire(Carte carte);
+    
+    public void avertirPiocheAdversaire(int i);
+    
+    public void avertirVictoire();
+    
+    public void avertirEgalite();
+    
+    public void avertirDefaite();
+    
+    public void avertirErreur();
     
 }

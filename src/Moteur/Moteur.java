@@ -91,26 +91,26 @@ public class Moteur implements Runnable{
         Intelligence int2;
         switch(this.mode){
             case JOUEUR_CONTRE_JOUEUR:
-                int1 = new Intelligence(c1);
-                int2 = new Intelligence(c2);
+                int1 = new IntelligenceHumain(c1);
+                int2 = new IntelligenceHumain(c2);
                 joueur1 = new Couple(j1,int1);
                 joueur2 = new Couple(j2,int2);
                 break;
             case JOUEUR_CONTRE_IA_FACILE:
-                int1 = new Intelligence(c1);
-                int2 = new Intelligence(new IAFacile());
+                int1 = new IntelligenceHumain(c1);
+                int2 = new IntelligenceIA(new IAFacile());
                 joueur1 = new Couple(j1,int1);
                 joueur2 = new Couple(j2,int2);
                 break;
             case JOUEUR_CONTRE_IA_INTERMEDIAIRE:
-                int1 = new Intelligence(c1);
-                int2 = new Intelligence(new IAIntermediaire());
+                int1 = new IntelligenceHumain(c1);
+                int2 = new IntelligenceIA(new IAIntermediaire());
                 joueur1 = new Couple(j1,int1);
                 joueur2 = new Couple(j2,int2);
                 break;
             case JOUEUR_CONTRE_IA_DIFFICILE:
-                int1 = new Intelligence(c1);
-                int2 = new Intelligence(new IADifficile());
+                int1 = new IntelligenceHumain(c1);
+                int2 = new IntelligenceIA(new IADifficile());
                 joueur1 = new Couple(j1,int1);
                 joueur2 = new Couple(j2,int2);
                 break;
@@ -162,12 +162,9 @@ public class Moteur implements Runnable{
         System.out.println("Pseudo joueur 2: " + pseudo2);
         
         // Retransmettre les pseudos
-        try{
-            c1.envoyerString(CodeMessage.PSEUDO, pseudo2);
-            c2.envoyerString(CodeMessage.PSEUDO, pseudo1);
-        } catch(IOException e){
-            throw new Error("Erreur de communication : pseudo non transmis");
-        }
+        c1.envoyerString(CodeMessage.PSEUDO, pseudo2);
+        c2.envoyerString(CodeMessage.PSEUDO, pseudo1);
+
         return new String[] {pseudo1, pseudo2};
     }
     
