@@ -70,6 +70,9 @@ public class Joueur {
         return this.scoreManche;
     }
     
+    public ArrayList<Carte> getMain(){
+        return main;
+    }
     
     
 }

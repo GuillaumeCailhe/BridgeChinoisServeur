@@ -8,6 +8,7 @@ package Moteur;
 import LibrairieCarte.Carte;
 import LibrairieReseau.CodeMessage;
 import LibrairieReseau.Communication;
+import LibrairieReseau.MessageEntier;
 import java.util.ArrayList;
 
 /**
@@ -24,13 +25,22 @@ public class IntelligenceHumain implements Intelligence {
     
     @Override
     public int getCoup() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        MessageEntier msg = (MessageEntier) client.getMessageParCode(CodeMessage.JOUER);
+        if(msg == null){
+            return -1;
+        } else {
+            return msg.getDonnees();
+        }
     }
 
     @Override
     public int getPioche() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+        MessageEntier msg = (MessageEntier) client.getMessageParCode(CodeMessage.PIOCHER);
+        if(msg == null){
+            return -1;
+        } else {
+            return msg.getDonnees();
+        }    }
 
     @Override
     public void avertirCoupAdversaire(Carte carte) {
@@ -62,6 +72,25 @@ public class IntelligenceHumain implements Intelligence {
     @Override
     public void avertirErreur() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void avertirTour(boolean oui) {
+        if(oui){
+            client.envoyer(CodeMessage.TOUR_OK);
+        } else {
+            client.envoyer(CodeMessage.TOUR_KO);
+        }
+    }
+
+    @Override
+    public void montrerMain(ArrayList<Carte> main) {
+        client.envoyerCartes(CodeMessage.MAIN, main);
+    }
+
+    @Override
+    public void montrerPiles(ArrayList<Carte> piles) {
+        client.envoyerCartes(CodeMessage.PILES, piles);
     }
     
 }

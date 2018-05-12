@@ -7,6 +7,7 @@ package Moteur;
 
 import IA.IA;
 import LibrairieCarte.Carte;
+import java.util.ArrayList;
 
 /**
  *
@@ -57,6 +58,21 @@ public class IntelligenceIA implements Intelligence{
 
     @Override
     public void avertirErreur() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void avertirTour(boolean oui) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void montrerMain(ArrayList<Carte> main) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void montrerPiles(ArrayList<Carte> piles) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

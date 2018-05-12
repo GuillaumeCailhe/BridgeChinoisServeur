@@ -117,6 +117,13 @@ public class Moteur implements Runnable{
         }
         
         // Appel aux fonctions envoyerMain(), envoyerPiles(), et envoyerTour() dans les Intelligences, la partie peut ensuite démarrer
+        joueur1.getIntelligence().montrerMain(joueur1.getJoueur().getMain());
+        joueur2.getIntelligence().montrerMain(joueur2.getJoueur().getMain());
+        joueur1.getIntelligence().montrerPiles(this.piles.getVisibles());
+        joueur2.getIntelligence().montrerPiles(this.piles.getVisibles());
+        joueur1.getIntelligence().avertirTour(true);
+        joueur2.getIntelligence().avertirTour(false);
+        System.out.println("Fin de l'initialisation");
     }
     
     
@@ -145,7 +152,7 @@ public class Moteur implements Runnable{
                 Logger.getLogger(Moteur.class.getName()).log(Level.SEVERE, null, ex);
             }
         } 
-        pseudo1 = (String) c1.getMessage().getDonnees();
+        pseudo1 = (String) c1.getMessageParCode(CodeMessage.PSEUDO).getDonnees();
         System.out.println("Pseudo joueur 1: " + pseudo1);
         if(mode == ModeDeJeu.JOUEUR_CONTRE_JOUEUR){
              while(c2.getNbMessages() == 0) {
@@ -155,7 +162,7 @@ public class Moteur implements Runnable{
                      Logger.getLogger(Moteur.class.getName()).log(Level.SEVERE, null, ex);
                  }
              }
-             pseudo2 = (String) c2.getMessage().getDonnees();            
+             pseudo2 = (String) c2.getMessageParCode(CodeMessage.PSEUDO).getDonnees();            
         } else {
             pseudo2 = "IA";
         }

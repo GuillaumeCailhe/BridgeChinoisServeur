@@ -8,6 +8,7 @@ package Moteur;
 import LibrairieReseau.Communication;
 import IA.IA;
 import LibrairieCarte.Carte;
+import java.util.ArrayList;
 
 /**
  *
@@ -30,5 +31,11 @@ public interface Intelligence {
     public void avertirDefaite();
     
     public void avertirErreur();
+    
+    public void avertirTour(boolean oui);
+    
+    public void montrerMain(ArrayList<Carte> main);
+    
+    public void montrerPiles(ArrayList<Carte> piles);
     
 }

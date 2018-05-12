@@ -84,6 +84,14 @@ public class Piles {
             throw new Error("Tentative d'accès à la pile d'index: " + indexPile);
         }
     }
+    
+    public ArrayList<Carte> getVisibles(){
+        ArrayList<Carte> visibles = new ArrayList<Carte>();
+        for(Stack<Carte> p : piles){
+            visibles.add(p.peek());
+        }
+        return visibles;
+    }
 // </editor-fold>  
     
 }

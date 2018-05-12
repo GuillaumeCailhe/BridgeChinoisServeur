@@ -8,6 +8,7 @@ import Carte.Paquet;
 import Carte.Piles;
 import LibrairieCarte.Carte;
 import LibrairieCarte.ValeurCarte;
+import java.util.ArrayList;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -47,6 +48,16 @@ public class TestPiles {
         ValeurCarte atout = piles.calculerAtout();
         for(int i=0; i<6; i++){
             assert atout.getValeur() >= piles.recupererCarte(i).getValeur().getValeur();
+        }
+    }
+    
+    public void testVisibles(){
+        Paquet paquet = new Paquet();
+        Piles piles = new Piles(paquet);
+        
+        ArrayList<Carte> visibles = piles.getVisibles();
+        for(int i = 0; i < 6; i++){
+            assert visibles.get(i) == piles.regarderCarte(i);
         }
     }
     

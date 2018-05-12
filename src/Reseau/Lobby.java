@@ -46,7 +46,7 @@ public class Lobby implements Runnable{
         Moteur moteur;
         for(Communication client : clientsDevantEtreTraites){
             if(client.getNbMessages() > 0){
-                switch(client.getMessage().getCode()){
+                switch(client.getPremierMessage().getCode()){
                     case PARTIE_JCJ:
                         if(clientEnAttente == null){
                             System.out.println("Un joueur demande de jouer, mais il est seul");
@@ -54,15 +54,11 @@ public class Lobby implements Runnable{
                         } else {
                             System.out.println("Deux joueurs veulent joeur, c'est parti !");
                             // Nouvelle partie JCJ
-                            try {
-                                client.envoyer(CodeMessage.PARTIE_DEMARRER);
-                                clientEnAttente.envoyer(CodeMessage.PARTIE_DEMARRER);
-                                moteur = new Moteur(ModeDeJeu.JOUEUR_CONTRE_JOUEUR, 1, clientEnAttente, client);
-                                t = new Thread(moteur);
-                                t.start();
-                            } catch(IOException e){
-                                System.out.println("Erreur de communication avec les clients");
-                            }
+                            client.envoyer(CodeMessage.PARTIE_DEMARRER);
+                            clientEnAttente.envoyer(CodeMessage.PARTIE_DEMARRER);
+                            moteur = new Moteur(ModeDeJeu.JOUEUR_CONTRE_JOUEUR, 1, clientEnAttente, client);
+                            t = new Thread(moteur);
+                            t.start();
                         }
                         clientsDevantEtreTraites.remove(client);
                         break;
