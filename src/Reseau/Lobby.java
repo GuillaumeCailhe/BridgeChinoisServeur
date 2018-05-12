@@ -51,7 +51,6 @@ public class Lobby implements Runnable{
                         if(clientEnAttente == null){
                             System.out.println("Un joueur demande de jouer, mais il est seul");
                             clientEnAttente = client;
-                            clientsDevantEtreTraites.remove(client);
                         } else {
                             System.out.println("Deux joueurs veulent joeur, c'est parti !");
                             // Nouvelle partie JCJ
@@ -61,24 +60,30 @@ public class Lobby implements Runnable{
                                 moteur = new Moteur(ModeDeJeu.JOUEUR_CONTRE_JOUEUR, 1, clientEnAttente, client);
                                 t = new Thread(moteur);
                                 t.start();
-                                clientsDevantEtreTraites.remove(client);
-                                clientsDevantEtreTraites.remove(clientEnAttente);
                             } catch(IOException e){
                                 System.out.println("Erreur de communication avec les clients");
                             }
                         }
+                        clientsDevantEtreTraites.remove(client);
+                        break;
                     case PARTIE_JCFACILE:
                         moteur = new Moteur(ModeDeJeu.JOUEUR_CONTRE_IA_FACILE, 1, client);
                         t = new Thread(moteur);
-                        t.start();                        
+                        t.start();  
+                        clientsDevantEtreTraites.remove(client);
+                        break;
                     case PARTIE_JCINTERMEDIAIRE:
                         moteur = new Moteur(ModeDeJeu.JOUEUR_CONTRE_IA_INTERMEDIAIRE, 1, client);
                         t = new Thread(moteur);
-                        t.start();                        
+                        t.start();    
+                        clientsDevantEtreTraites.remove(client);
+                        break;                     
                     case PARTIE_JCDIFFICILE:
                         moteur = new Moteur(ModeDeJeu.JOUEUR_CONTRE_IA_DIFFICILE, 1, client);
                         t = new Thread(moteur);
-                        t.start();
+                        t.start(); 
+                        clientsDevantEtreTraites.remove(client);
+                        break;
                         // case PARTIE_CHARGER:
                 }
             }
