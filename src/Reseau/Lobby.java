@@ -35,10 +35,16 @@ public class Lobby implements Runnable{
 
     @Override
     public void run() {
-        // On parcours les clients en attentes et on regarde s'ils ont envoyé une requête de partie
-        while(true){
-            boucle();
-        }
+        new java.util.Timer().schedule( 
+            new java.util.TimerTask() {
+                @Override
+                public void run() {
+                    boucle();
+                }
+            }, 
+            500,
+            500
+        );
     }
     
     private void boucle(){
@@ -83,11 +89,6 @@ public class Lobby implements Runnable{
                         // case PARTIE_CHARGER:
                 }
             }
-        }
-        try {
-            Thread.sleep(10);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

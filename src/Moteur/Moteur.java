@@ -19,6 +19,7 @@ import LibrairieReseau.Message;
 import LibrairieReseau.MessageString;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,6 +53,11 @@ public class Moteur implements Runnable{
         this.nbManches = nbManches;
         this.mancheActuelle = 0;
         
+        client1.setNotifie(this);
+        if(mode == ModeDeJeu.JOUEUR_CONTRE_JOUEUR){
+            client2.setNotifie(this);
+        }
+        
         this.c1 = client1;
         this.c2 = client2;
     }
@@ -78,6 +84,8 @@ public class Moteur implements Runnable{
             main1.add(paquet.distribuerUneCarte());
             main2.add(paquet.distribuerUneCarte());
         }
+        Collections.sort(main1);
+        Collections.sort(main2);
         System.out.println("terminé.");
         
         // Echange des pseudos
@@ -147,7 +155,9 @@ public class Moteur implements Runnable{
         String pseudo2;
         while(c1.getNbMessages() == 0) {
             try {
-                Thread.sleep(10);
+                synchronized(this){
+                    wait();
+                }
             } catch (InterruptedException ex) {
                 Logger.getLogger(Moteur.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -157,7 +167,9 @@ public class Moteur implements Runnable{
         if(mode == ModeDeJeu.JOUEUR_CONTRE_JOUEUR){
              while(c2.getNbMessages() == 0) {
                  try {
-                     Thread.sleep(10);
+                     synchronized(this){
+                     wait();
+                 }
                  } catch (InterruptedException ex) {
                      Logger.getLogger(Moteur.class.getName()).log(Level.SEVERE, null, ex);
                  }

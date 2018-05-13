@@ -28,7 +28,7 @@ public class Serveur {
         socketServeur.setSoTimeout(0); // Pas de timeout sur l'accept
         
         while(true){
-            Communication client = new Communication(socketServeur.accept());
+            Communication client = new Communication(socketServeur.accept(),lobby);
             System.out.println("Nouveau joueur: " + client.getSocket().getInetAddress());
             Thread t = new Thread(client);
             t.start();
