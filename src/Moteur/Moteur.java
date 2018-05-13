@@ -48,7 +48,7 @@ public class Moteur implements Runnable{
     private Communication c1;
     private Communication c2;
     
-    public Moteur(ModeDeJeu mode, int nbManches, Communication client1, Communication client2){
+    public Moteur(ModeDeJeu mode, Communication client1, Communication client2){
         this.mode = mode;
         this.nbManches = nbManches;
         this.mancheActuelle = 0;
@@ -60,6 +60,9 @@ public class Moteur implements Runnable{
         
         this.c1 = client1;
         this.c2 = client2;
+        
+        this.nbManches = this.negociationNbManches();
+        System.out.println("Il y aura " + this.nbManches + " manches");
     }
     
     /**
@@ -68,8 +71,8 @@ public class Moteur implements Runnable{
      * @param nbManches 
      * @param client1 le joueur humain de la partie
      */
-    public Moteur(ModeDeJeu mode, int nbManches, Communication client1){
-        this(mode,nbManches,client1,null);
+    public Moteur(ModeDeJeu mode, Communication client1){
+        this(mode,client1,null);
     }
 
     @Override
@@ -129,18 +132,59 @@ public class Moteur implements Runnable{
         joueur2.getIntelligence().montrerMain(joueur2.getJoueur().getMain());
         joueur1.getIntelligence().montrerPiles(this.piles.getVisibles());
         joueur2.getIntelligence().montrerPiles(this.piles.getVisibles());
-        joueur1.getIntelligence().avertirTour(true);
-        joueur2.getIntelligence().avertirTour(false);
         System.out.println("Fin de l'initialisation");
+    
+        jeu();
     }
     
-    
-    public int getNbManches() {
-        return nbManches;
+    private void jeu(){
+        Couple gagnant;
+        Couple perdant;
+        
+        for(mancheActuelle = 1; mancheActuelle <= nbManches; mancheActuelle++){
+            
+            // Choix du joueur qui commence
+            if(mancheActuelle % 2 == 1){ // Manches 1,3,5...
+                gagnant = joueur1;
+                perdant = joueur2;
+            } else {
+                gagnant = joueur2;
+                perdant = joueur1;
+            }
+            gagnant.getIntelligence().avertirTour(true);
+            perdant.getIntelligence().avertirTour(false);
+            
+            // Boucle principale de la manche
+            while(!partieFinie()){
+                // Lire le coup du gagnant / demande de sauvegarde ou abandon
+                
+                // Avertir l'autre joueur
+                
+                // Lire le coup du perdant / demande de sauvegarde ou abandon, ou demande annulation par le premier joueur
+                
+                // Avertir l'autre joueur
+                
+                // Attendre x secondes pour laisser le joueur annuler
+                
+                // Ajouter le coup à l'historique
+                
+                // Comparer les cartes pour déterminer le nouveau gagnant/perdant et incrémenter le pli du joueur gagnant
+                
+                
+                break;
+            }
+            
+            // Fin manche
+            // Afficher vainqueur de la manche
+            
+            // Mettre à jour les manches pour chaque joueur
+            
+        }
+        // Afficher vainqueur de la partie
     }
-
-    public int getMancheActuelle() {
-        return mancheActuelle;
+    
+    private boolean partieFinie(){
+        return (joueur1.getJoueur().getMain().isEmpty());
     }
 
     /**
@@ -153,39 +197,81 @@ public class Moteur implements Runnable{
         System.out.println("Récupération des pseudos");
         String pseudo1;
         String pseudo2;
-        while(c1.getNbMessages() == 0) {
-            try {
-                synchronized(this){
-                    wait();
-                }
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Moteur.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } 
+        
+        // Récupération du pseudo du joueur 1
+        attendreMessage(c1);
         pseudo1 = (String) c1.getMessageParCode(CodeMessage.PSEUDO).getDonnees();
         System.out.println("Pseudo joueur 1: " + pseudo1);
+        
+        // Récupération du pseudo du joueur 2 ("IA" si c'est une IA)
         if(mode == ModeDeJeu.JOUEUR_CONTRE_JOUEUR){
-             while(c2.getNbMessages() == 0) {
-                 try {
-                     synchronized(this){
-                     wait();
-                 }
-                 } catch (InterruptedException ex) {
-                     Logger.getLogger(Moteur.class.getName()).log(Level.SEVERE, null, ex);
-                 }
-             }
-             pseudo2 = (String) c2.getMessageParCode(CodeMessage.PSEUDO).getDonnees();            
+            attendreMessage(c2);
+            pseudo2 = (String) c2.getMessageParCode(CodeMessage.PSEUDO).getDonnees();            
         } else {
             pseudo2 = "IA";
         }
         System.out.println("Pseudo joueur 2: " + pseudo2);
         
-        // Retransmettre les pseudos
+        // Retransmission les pseudos
         c1.envoyerString(CodeMessage.PSEUDO, pseudo2);
         c2.envoyerString(CodeMessage.PSEUDO, pseudo1);
 
         return new String[] {pseudo1, pseudo2};
     }
     
+    /**
+     * Négocie le nombre de manches de la partie entre les 2 clients. N'effectue les modifications qu'entre les 2 communications, pas dans Joueur() ou Moteur()
+     * @return le nombre de manches
+     */
+    private int negociationNbManches(){
+        int nb1; // Le nombre de manches voulues par le joueur 1
+        int nb2; // Le nombre de manches voulues par le joueur 2
+        
+        attendreMessage(this.c1);
+        nb1 = (int) this.c1.getMessageParCode(CodeMessage.PARTIE_NBMANCHES).getDonnees();
+        System.out.println("Le joueur 1 veut " + nb1 + " manches");
+        if(this.mode == ModeDeJeu.JOUEUR_CONTRE_JOUEUR){
+            attendreMessage(this.c2);
+            nb2 = (int) this.c2.getMessageParCode(CodeMessage.PARTIE_NBMANCHES).getDonnees();
+            System.out.println("Le joueur 2 veut " + nb2 + " manches");
+        } else {
+            nb2 = nb1;
+        }
+        
+        c1.envoyerEntier(CodeMessage.PARTIE_NBMANCHES,(byte) Math.min(nb1,nb2));
+        if(this.mode == ModeDeJeu.JOUEUR_CONTRE_JOUEUR){
+            c2.envoyerEntier(CodeMessage.PARTIE_NBMANCHES,(byte) Math.min(nb1,nb2));
+        }
+        return Math.min(nb1, nb2);
+    }
     
+    private void attendreMessage(Communication origine){
+        if(origine.getNbMessages() == 0){
+            synchronized(this){
+                do{
+                    try{
+                        wait();
+                    } catch (InterruptedException ex) {
+                         Logger.getLogger(Moteur.class.getName()).log(Level.SEVERE, null, ex);
+                     }
+                } while(origine.getNbMessages() == 0);
+            }
+        }
+    }
+     
+    /**
+     * 
+     * @return le nombre de manches dans la partie
+     */
+    public int getNbManches() {
+        return nbManches;
+    }
+
+    /**
+     * 
+     * @return le numéro de la manche actuelle
+     */
+    public int getMancheActuelle() {
+        return mancheActuelle;
+    }
 }

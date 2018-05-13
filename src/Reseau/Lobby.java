@@ -62,26 +62,26 @@ public class Lobby implements Runnable{
                             // Nouvelle partie JCJ
                             client.envoyer(CodeMessage.PARTIE_DEMARRER);
                             clientEnAttente.envoyer(CodeMessage.PARTIE_DEMARRER);
-                            moteur = new Moteur(ModeDeJeu.JOUEUR_CONTRE_JOUEUR, 1, clientEnAttente, client);
+                            moteur = new Moteur(ModeDeJeu.JOUEUR_CONTRE_JOUEUR, clientEnAttente, client);
                             t = new Thread(moteur);
                             t.start();
                         }
                         clientsDevantEtreTraites.remove(client);
                         break;
                     case PARTIE_JCFACILE:
-                        moteur = new Moteur(ModeDeJeu.JOUEUR_CONTRE_IA_FACILE, 1, client);
+                        moteur = new Moteur(ModeDeJeu.JOUEUR_CONTRE_IA_FACILE, client);
                         t = new Thread(moteur);
                         t.start();  
                         clientsDevantEtreTraites.remove(client);
                         break;
                     case PARTIE_JCINTERMEDIAIRE:
-                        moteur = new Moteur(ModeDeJeu.JOUEUR_CONTRE_IA_INTERMEDIAIRE, 1, client);
+                        moteur = new Moteur(ModeDeJeu.JOUEUR_CONTRE_IA_INTERMEDIAIRE, client);
                         t = new Thread(moteur);
                         t.start();    
                         clientsDevantEtreTraites.remove(client);
                         break;                     
                     case PARTIE_JCDIFFICILE:
-                        moteur = new Moteur(ModeDeJeu.JOUEUR_CONTRE_IA_DIFFICILE, 1, client);
+                        moteur = new Moteur(ModeDeJeu.JOUEUR_CONTRE_IA_DIFFICILE,  client);
                         t = new Thread(moteur);
                         t.start(); 
                         clientsDevantEtreTraites.remove(client);
