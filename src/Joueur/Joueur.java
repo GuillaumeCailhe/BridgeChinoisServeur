@@ -55,11 +55,15 @@ public class Joueur {
         this.scoreManche = 0;
     }
     
+    public Carte jouerCarte(int indexMain){
+        return this.main.remove(indexMain);
+    }
+    
     /**
      * Pioche une carte dans la pile
      */
-    public boolean piocherCarte(int indexMain){
-        throw new Error("Joueur.piocherCarte() pas implémenté");
+    public void piocherCarte(int indexPile){
+        main.add(moteur.getPiles().getVisibles().get(indexPile));
     }
 
     public void gagnePli(){

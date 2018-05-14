@@ -7,7 +7,7 @@ package Reseau;
 
 import LibrairieReseau.CodeMessage;
 import LibrairieReseau.Communication;
-import Moteur.ModeDeJeu;
+import LibrairieMoteur.ModeDeJeu;
 import Moteur.Moteur;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -65,6 +65,7 @@ public class Lobby implements Runnable{
                             moteur = new Moteur(ModeDeJeu.JOUEUR_CONTRE_JOUEUR, clientEnAttente, client);
                             t = new Thread(moteur);
                             t.start();
+                            clientEnAttente = null;
                         }
                         clientsDevantEtreTraites.remove(client);
                         break;

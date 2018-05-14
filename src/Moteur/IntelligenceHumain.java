@@ -25,6 +25,7 @@ public class IntelligenceHumain implements Intelligence {
     
     @Override
     public int getCoup() {
+        attendreMessage();
         MessageEntier msg = (MessageEntier) client.getMessageParCode(CodeMessage.JOUER);
         if(msg == null){
             return -1;
@@ -35,6 +36,7 @@ public class IntelligenceHumain implements Intelligence {
 
     @Override
     public int getPioche() {
+        attendreMessage();
         MessageEntier msg = (MessageEntier) client.getMessageParCode(CodeMessage.PIOCHER);
         if(msg == null){
             return -1;
@@ -91,6 +93,18 @@ public class IntelligenceHumain implements Intelligence {
     @Override
     public void montrerPiles(ArrayList<Carte> piles) {
         client.envoyerCartes(CodeMessage.PILES, piles);
+    }
+    
+    private void attendreMessage(){
+        if(client.getNbMessages() == 0){
+            try {
+                synchronized(this){
+                    wait();
+                }
+            } catch (InterruptedException ex) {
+                throw new Error("Erreur wait() dans IntelligenceHumain");
+            }
+        }
     }
     
 }

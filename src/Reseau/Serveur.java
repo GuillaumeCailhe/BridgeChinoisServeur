@@ -7,7 +7,7 @@ package Reseau;
 
 import LibrairieReseau.Communication;
 import LibrairieReseau.Message;
-import Moteur.ModeDeJeu;
+import LibrairieMoteur.ModeDeJeu;
 import Moteur.Moteur;
 import java.io.IOException;
 import java.net.ServerSocket;

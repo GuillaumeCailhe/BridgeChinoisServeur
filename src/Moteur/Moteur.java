@@ -5,6 +5,7 @@
  */
 package Moteur;
 
+import LibrairieMoteur.ModeDeJeu;
 import LibrairieCarte.ValeurCarte;
 import Carte.Piles;
 import Carte.Paquet;
@@ -140,6 +141,8 @@ public class Moteur implements Runnable{
     private void jeu(){
         Couple gagnant;
         Couple perdant;
+        Carte carteGagnant;
+        Carte cartePerdant;
         
         for(mancheActuelle = 1; mancheActuelle <= nbManches; mancheActuelle++){
             
@@ -151,18 +154,24 @@ public class Moteur implements Runnable{
                 gagnant = joueur2;
                 perdant = joueur1;
             }
-            gagnant.getIntelligence().avertirTour(true);
-            perdant.getIntelligence().avertirTour(false);
             
             // Boucle principale de la manche
             while(!partieFinie()){
+                // Avertir ordre du tour
+                gagnant.getIntelligence().avertirTour(true);
+                perdant.getIntelligence().avertirTour(false);
+                
                 // Lire le coup du gagnant / demande de sauvegarde ou abandon
+                carteGagnant = gagnant.getJoueur().jouerCarte(gagnant.getIntelligence().getCoup());
                 
                 // Avertir l'autre joueur
+                perdant.getIntelligence().avertirCoupAdversaire(carteGagnant);
                 
                 // Lire le coup du perdant / demande de sauvegarde ou abandon, ou demande annulation par le premier joueur
+                cartePerdant = perdant.getJoueur().jouerCarte(perdant.getIntelligence().getCoup());
                 
                 // Avertir l'autre joueur
+                gagnant.getIntelligence().avertirCoupAdversaire(cartePerdant);
                 
                 // Attendre x secondes pour laisser le joueur annuler
                 
@@ -273,5 +282,9 @@ public class Moteur implements Runnable{
      */
     public int getMancheActuelle() {
         return mancheActuelle;
+    }
+    
+    public Piles getPiles(){
+        return this.piles;
     }
 }
