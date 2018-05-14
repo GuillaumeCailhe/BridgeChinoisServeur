@@ -78,26 +78,12 @@ public class Moteur implements Runnable{
 
     @Override
     public void run() {
-        // Distribution des cartes
-        System.out.println("Distribution des cartes en cours...");
-        Paquet paquet = new Paquet();
-        this.piles = new Piles(paquet);
-        ArrayList<Carte> main1 = new ArrayList<Carte>();
-        ArrayList<Carte> main2 = new ArrayList<Carte>();
-        for(int i=0; i<11; i++){
-            main1.add(paquet.distribuerUneCarte());
-            main2.add(paquet.distribuerUneCarte());
-        }
-        Collections.sort(main1);
-        Collections.sort(main2);
-        System.out.println("terminé.");
-        
         // Echange des pseudos
         String[] pseudos = echangePseudos();
         
         // Création des joueurs
-        Joueur j1 = new Joueur(pseudos[0],main1,this);
-        Joueur j2 = new Joueur(pseudos[1],main2,this);
+        Joueur j1 = new Joueur(pseudos[0],this);
+        Joueur j2 = new Joueur(pseudos[1],this);
 
         Intelligence int1;
         Intelligence int2;
@@ -127,13 +113,6 @@ public class Moteur implements Runnable{
                 joueur2 = new Couple(j2,int2);
                 break;
         }
-        
-        // Appel aux fonctions envoyerMain(), envoyerPiles(), et envoyerTour() dans les Intelligences, la partie peut ensuite démarrer
-        joueur1.getIntelligence().montrerMain(joueur1.getJoueur().getMain());
-        joueur2.getIntelligence().montrerMain(joueur2.getJoueur().getMain());
-        joueur1.getIntelligence().montrerPiles(this.piles.getVisibles());
-        joueur2.getIntelligence().montrerPiles(this.piles.getVisibles());
-        System.out.println("Fin de l'initialisation");
     
         jeu();
     }
@@ -154,9 +133,14 @@ public class Moteur implements Runnable{
                 gagnant = joueur2;
                 perdant = joueur1;
             }
+           
+            this.distribuerCartes();
             
             // Boucle principale de la manche
             while(!partieFinie()){
+                // Calcul de l'atout
+                this.atout = this.piles.calculerAtout();
+                
                 // Avertir ordre du tour
                 gagnant.getIntelligence().avertirTour(true);
                 perdant.getIntelligence().avertirTour(false);
@@ -194,6 +178,22 @@ public class Moteur implements Runnable{
     
     private boolean partieFinie(){
         return (joueur1.getJoueur().getMain().isEmpty());
+    }
+    
+    /**
+     * Compare 2 cartes en prenant en compte l'atout
+     * @param carte1
+     * @param carte2
+     * @return 1 si carte1>carte2, -1 si carte2>carte1
+     */
+    private int comparerCartes(Carte carte1, Carte carte2){
+        if(carte1.getValeur() == atout && carte2.getValeur() != atout){
+            return 1;
+        } else if (carte2.getValeur() == atout && carte1.getValeur() != atout){
+            return -1;
+        } else {
+            return carte1.compareTo(carte2);
+        }
     }
 
     /**
@@ -252,6 +252,34 @@ public class Moteur implements Runnable{
             c2.envoyerEntier(CodeMessage.PARTIE_NBMANCHES,(byte) Math.min(nb1,nb2));
         }
         return Math.min(nb1, nb2);
+    }
+    
+    
+    /**
+     * Envoi les mains/piles aux joueurs
+     */
+    private void distribuerCartes(){
+        // Distribution des cartes
+        System.out.println("Distribution des cartes en cours...");
+        Paquet paquet = new Paquet();
+        this.piles = new Piles(paquet);
+        ArrayList<Carte> main1 = new ArrayList<Carte>();
+        ArrayList<Carte> main2 = new ArrayList<Carte>();
+        for(int i=0; i<11; i++){
+            main1.add(paquet.distribuerUneCarte());
+            main2.add(paquet.distribuerUneCarte());
+        }
+        Collections.sort(main1);
+        Collections.sort(main2);
+        joueur1.getJoueur().setMain(main1);
+        joueur2.getJoueur().setMain(main2);
+        System.out.println("terminé.");
+        
+        // Appel aux fonctions envoyerMain(), envoyerPiles(), et envoyerTour() dans les Intelligences, la partie peut ensuite démarrer
+        joueur1.getIntelligence().montrerMain(joueur1.getJoueur().getMain());
+        joueur2.getIntelligence().montrerMain(joueur2.getJoueur().getMain());
+        joueur1.getIntelligence().montrerPiles(this.piles.getVisibles());
+        joueur2.getIntelligence().montrerPiles(this.piles.getVisibles());
     }
     
     private void attendreMessage(Communication origine){

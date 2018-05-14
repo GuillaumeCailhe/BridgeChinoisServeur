@@ -22,9 +22,9 @@ public class Joueur {
     private String[] manches;
     private int scoreManche;
     
-    public Joueur(String pseudo, ArrayList<Carte> main, Moteur moteur){
+    public Joueur(String pseudo, Moteur moteur){
         this.pseudo = pseudo;
-        this.main = main;
+        this.main = null;
         this.moteur = moteur;
         
         this.manches = new String[moteur.getNbManches()];
@@ -32,6 +32,10 @@ public class Joueur {
             manches[i] = "?";
         }
         this.scoreManche = 0;
+    }
+    
+    public void setMain(ArrayList<Carte> main){
+        this.main = main;
     }
     
     /**
