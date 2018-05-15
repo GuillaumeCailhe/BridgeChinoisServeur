@@ -42,8 +42,8 @@ public class Lobby implements Runnable{
                     boucle();
                 }
             }, 
-            500,
-            500
+            0,
+            100
         );
     }
     

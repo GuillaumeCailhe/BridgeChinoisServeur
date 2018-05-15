@@ -75,5 +75,10 @@ public class IntelligenceIA implements Intelligence{
     public void montrerPiles(ArrayList<Carte> piles) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public void confirmerCoup(boolean oui) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

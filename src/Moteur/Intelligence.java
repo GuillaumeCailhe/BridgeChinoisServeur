@@ -34,6 +34,8 @@ public interface Intelligence {
     
     public void avertirTour(boolean oui);
     
+    public void confirmerCoup(boolean oui);
+    
     public void montrerMain(ArrayList<Carte> main);
     
     public void montrerPiles(ArrayList<Carte> piles);

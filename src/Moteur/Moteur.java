@@ -53,10 +53,11 @@ public class Moteur implements Runnable{
         this.mode = mode;
         this.nbManches = nbManches;
         this.mancheActuelle = 0;
+        this.historique = new Stack<Carte[]>();
         
-        client1.setNotifie(this);
+        client1.addNotifie(this);
         if(mode == ModeDeJeu.JOUEUR_CONTRE_JOUEUR){
-            client2.setNotifie(this);
+            client2.addNotifie(this);
         }
         
         this.c1 = client1;
@@ -123,6 +124,8 @@ public class Moteur implements Runnable{
         Carte carteGagnant;
         Carte cartePerdant;
         
+        historique.clear();
+        
         for(mancheActuelle = 1; mancheActuelle <= nbManches; mancheActuelle++){
             
             // Choix du joueur qui commence
@@ -147,12 +150,17 @@ public class Moteur implements Runnable{
                 
                 // Lire le coup du gagnant / demande de sauvegarde ou abandon
                 carteGagnant = gagnant.getJoueur().jouerCarte(gagnant.getIntelligence().getCoup());
+                gagnant.getIntelligence().confirmerCoup(true);
+                System.out.println("Carte jouée: " + carteGagnant);
                 
                 // Avertir l'autre joueur
                 perdant.getIntelligence().avertirCoupAdversaire(carteGagnant);
+                perdant.getIntelligence().avertirTour(true);
                 
                 // Lire le coup du perdant / demande de sauvegarde ou abandon, ou demande annulation par le premier joueur
                 cartePerdant = perdant.getJoueur().jouerCarte(perdant.getIntelligence().getCoup());
+                perdant.getIntelligence().confirmerCoup(true);
+                System.out.println("Carte jouée: " + cartePerdant);
                 
                 // Avertir l'autre joueur
                 gagnant.getIntelligence().avertirCoupAdversaire(cartePerdant);
@@ -160,11 +168,20 @@ public class Moteur implements Runnable{
                 // Attendre x secondes pour laisser le joueur annuler
                 
                 // Ajouter le coup à l'historique
+                historique.add(new Carte[] {carteGagnant,cartePerdant});
                 
                 // Comparer les cartes pour déterminer le nouveau gagnant/perdant et incrémenter le pli du joueur gagnant
+                if(this.comparerCartes(carteGagnant, cartePerdant) > 0){
+                    System.out.println("gagnant gagne");
+                    gagnant.getJoueur().gagnePli();
+                } else {
+                    System.out.println("perdant gagne");
+                    perdant.getJoueur().gagnePli();
+                    Couple temp = gagnant;
+                    gagnant = perdant;
+                    perdant = temp;
+                }
                 
-                
-                break;
             }
             
             // Fin manche

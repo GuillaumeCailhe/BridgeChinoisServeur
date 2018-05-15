@@ -21,6 +21,7 @@ public class IntelligenceHumain implements Intelligence {
     
     public IntelligenceHumain(Communication client){
         this.client = client;
+        this.client.addNotifie(this);
     }
     
     @Override
@@ -48,7 +49,7 @@ public class IntelligenceHumain implements Intelligence {
     public void avertirCoupAdversaire(Carte carte) {
         ArrayList<Carte> arrayCarte = new ArrayList<Carte>();
         arrayCarte.add(carte);
-        client.envoyerCartes(CodeMessage.JOUER, arrayCarte);
+        client.envoyerCartes(CodeMessage.JOUER_ADVERSAIRE, arrayCarte);
     }
 
     @Override
@@ -104,6 +105,15 @@ public class IntelligenceHumain implements Intelligence {
             } catch (InterruptedException ex) {
                 throw new Error("Erreur wait() dans IntelligenceHumain");
             }
+        }
+    }
+
+    @Override
+    public void confirmerCoup(boolean oui) {
+        if(oui){
+            client.envoyer(CodeMessage.JOUER_OK);
+        } else {
+            client.envoyer(CodeMessage.JOUER_KO);
         }
     }
     
