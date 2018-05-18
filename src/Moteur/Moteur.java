@@ -123,6 +123,7 @@ public class Moteur implements Runnable{
         Couple perdant;
         Carte carteGagnant;
         Carte cartePerdant;
+        Carte[] pioche = new Carte[2];
         
         historique.clear();
         
@@ -149,18 +150,14 @@ public class Moteur implements Runnable{
                 perdant.getIntelligence().avertirTour(false);
                 
                 // Lire le coup du gagnant / demande de sauvegarde ou abandon
-                carteGagnant = gagnant.getJoueur().jouerCarte(gagnant.getIntelligence().getCoup());
-                gagnant.getIntelligence().confirmerCoup(true);
-                System.out.println("Carte jouée: " + carteGagnant);
+                carteGagnant = jouerCarte(gagnant);
                 
                 // Avertir l'autre joueur
                 perdant.getIntelligence().avertirCoupAdversaire(carteGagnant);
                 perdant.getIntelligence().avertirTour(true);
                 
                 // Lire le coup du perdant / demande de sauvegarde ou abandon, ou demande annulation par le premier joueur
-                cartePerdant = perdant.getJoueur().jouerCarte(perdant.getIntelligence().getCoup());
-                perdant.getIntelligence().confirmerCoup(true);
-                System.out.println("Carte jouée: " + cartePerdant);
+                cartePerdant = jouerCarte(perdant);
                 
                 // Avertir l'autre joueur
                 gagnant.getIntelligence().avertirCoupAdversaire(cartePerdant);
@@ -172,16 +169,31 @@ public class Moteur implements Runnable{
                 
                 // Comparer les cartes pour déterminer le nouveau gagnant/perdant et incrémenter le pli du joueur gagnant
                 if(this.comparerCartes(carteGagnant, cartePerdant) > 0){
-                    System.out.println("gagnant gagne");
-                    gagnant.getJoueur().gagnePli();
+                    System.out.println(gagnant.getJoueur().getPseudo() + " gagne");
                 } else {
-                    System.out.println("perdant gagne");
-                    perdant.getJoueur().gagnePli();
+                    System.out.println(perdant.getJoueur().getPseudo() + " gagne");
                     Couple temp = gagnant;
                     gagnant = perdant;
                     perdant = temp;
                 }
+                gagnant.getJoueur().gagnePli();
+                gagnant.getIntelligence().avertirVictoirePli();
+                perdant.getIntelligence().avertirDefaitePli();
                 
+                // Pioche
+                gagnant.getIntelligence().avertirTour(true);
+                perdant.getIntelligence().avertirTour(false);
+                System.out.println(gagnant.getJoueur().getPseudo() + " pioche.");
+                pioche = piocherCarte(gagnant);
+                gagnant.getIntelligence().avertirPiocheAdversaire(pioche[0],pioche[1]);
+                perdant.getIntelligence().avertirPiocheAdversaire(pioche[0],pioche[1]);
+                
+                perdant.getIntelligence().avertirTour(true);
+                System.out.println(perdant.getJoueur().getPseudo() + " pioche.");
+                pioche = piocherCarte(perdant);
+                perdant.getIntelligence().avertirPiocheAdversaire(pioche[0],pioche[1]);
+                gagnant.getIntelligence().avertirPiocheAdversaire(pioche[0],pioche[1]);
+
             }
             
             // Fin manche
@@ -299,17 +311,31 @@ public class Moteur implements Runnable{
         joueur2.getIntelligence().montrerPiles(this.piles.getVisibles());
     }
     
-    private void attendreMessage(Communication origine){
+    private Carte jouerCarte(Couple joueur){
+        Carte carte = joueur.getJoueur().jouerCarte(joueur.getIntelligence().getCoup());
+        joueur.getIntelligence().confirmerCoup(true);
+        System.out.println(joueur.getJoueur().getPseudo() + " a jouée: " + carte);
+        return carte;
+    }
+    
+    private Carte[] piocherCarte(Couple joueur){
+        Carte[] piocher = new Carte[2];
+        int i = joueur.getIntelligence().getPioche();
+        piocher[0] = joueur.getJoueur().piocherCarte(i);
+        piocher[1] = piles.regarderCarte(i);
+        System.out.println(joueur.getJoueur().getPseudo() + " a pioché la carte " + piocher[0]);
+        return piocher;
+    }
+    
+    private synchronized void attendreMessage(Communication origine){
         if(origine.getNbMessages() == 0){
-            synchronized(this){
-                do{
-                    try{
-                        wait();
-                    } catch (InterruptedException ex) {
-                         Logger.getLogger(Moteur.class.getName()).log(Level.SEVERE, null, ex);
-                     }
-                } while(origine.getNbMessages() == 0);
-            }
+            do{
+                try{
+                    wait();
+                } catch (InterruptedException ex) {
+                     Logger.getLogger(Moteur.class.getName()).log(Level.SEVERE, null, ex);
+                 }
+            } while(origine.getNbMessages() == 0); // ELLE EST LA POUR UNE RAISON LA BOUCLE, MOTEUR PEUT ETRE REVEILLE PAR L'AUTRE COMMUNICATION
         }
     }
      

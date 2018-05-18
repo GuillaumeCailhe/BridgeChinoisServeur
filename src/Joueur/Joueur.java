@@ -66,8 +66,14 @@ public class Joueur {
     /**
      * Pioche une carte dans la pile
      */
-    public void piocherCarte(int indexPile){
-        main.add(moteur.getPiles().getVisibles().get(indexPile));
+    public Carte piocherCarte(int indexPile){
+        Carte p = moteur.getPiles().recupererCarte(indexPile);
+        for(int i = 0; i < main.size(); i++){
+            if(main.get(i).compareTo(p) > 0){
+                main.add(i,p);
+            }
+        }
+        return p;
     }
 
     public void gagnePli(){
@@ -80,6 +86,10 @@ public class Joueur {
     
     public ArrayList<Carte> getMain(){
         return main;
+    }
+    
+    public String getPseudo(){
+        return this.pseudo;
     }
     
     

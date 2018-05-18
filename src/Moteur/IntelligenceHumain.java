@@ -28,22 +28,15 @@ public class IntelligenceHumain implements Intelligence {
     public int getCoup() {
         attendreMessage();
         MessageEntier msg = (MessageEntier) client.getMessageParCode(CodeMessage.JOUER);
-        if(msg == null){
-            return -1;
-        } else {
-            return msg.getDonnees();
-        }
+        return msg.getDonnees();
     }
 
     @Override
     public int getPioche() {
         attendreMessage();
         MessageEntier msg = (MessageEntier) client.getMessageParCode(CodeMessage.PIOCHER);
-        if(msg == null){
-            return -1;
-        } else {
-            return msg.getDonnees();
-        }    }
+        return msg.getDonnees();
+    }
 
     @Override
     public void avertirCoupAdversaire(Carte carte) {
@@ -53,22 +46,35 @@ public class IntelligenceHumain implements Intelligence {
     }
 
     @Override
-    public void avertirPiocheAdversaire(int i) {
-        client.envoyerEntier(CodeMessage.PIOCHER, (byte) i);
+    public void avertirPiocheAdversaire(Carte pioche, Carte revelee) {        
+        ArrayList<Carte> arrayCarte = new ArrayList<Carte>();
+        arrayCarte.add(pioche);
+        arrayCarte.add(revelee);
+        client.envoyerCartes(CodeMessage.PIOCHER_ADVERSAIRE,arrayCarte);
+    }
+    
+    @Override
+    public void avertirVictoirePli() {
+        client.envoyer(CodeMessage.VICTOIRE_PLI);
     }
 
     @Override
-    public void avertirVictoire() {
+    public void avertirDefaitePli() {
+        client.envoyer(CodeMessage.DEFAITE_PLI);
+    }
+    
+    @Override
+    public void avertirVictoireManche() {
         client.envoyer(CodeMessage.VICTOIRE_MANCHE);
     }
 
     @Override
-    public void avertirEgalite() {
+    public void avertirEgaliteManche() {
         client.envoyer(CodeMessage.EGALITE_MANCHE);
     }
 
     @Override
-    public void avertirDefaite() {
+    public void avertirDefaiteManche() {
         client.envoyer(CodeMessage.DEFAITE_MANCHE);
     }
 
@@ -96,12 +102,10 @@ public class IntelligenceHumain implements Intelligence {
         client.envoyerCartes(CodeMessage.PILES, piles);
     }
     
-    private void attendreMessage(){
+    private synchronized void attendreMessage(){
         if(client.getNbMessages() == 0){
             try {
-                synchronized(this){
-                    wait();
-                }
+                wait();
             } catch (InterruptedException ex) {
                 throw new Error("Erreur wait() dans IntelligenceHumain");
             }
@@ -116,5 +120,6 @@ public class IntelligenceHumain implements Intelligence {
             client.envoyer(CodeMessage.JOUER_KO);
         }
     }
+
     
 }

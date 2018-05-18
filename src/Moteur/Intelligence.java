@@ -22,13 +22,17 @@ public interface Intelligence {
     
     public void avertirCoupAdversaire(Carte carte);
     
-    public void avertirPiocheAdversaire(int i);
+    public void avertirPiocheAdversaire(Carte pioche, Carte revelee);
     
-    public void avertirVictoire();
+    public void avertirVictoirePli();
+        
+    public void avertirDefaitePli();
     
-    public void avertirEgalite();
+    public void avertirVictoireManche();
     
-    public void avertirDefaite();
+    public void avertirEgaliteManche();
+    
+    public void avertirDefaiteManche();
     
     public void avertirErreur();
     
