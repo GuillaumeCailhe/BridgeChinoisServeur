@@ -7,6 +7,7 @@ package Moteur;
 
 import IA.IA;
 import LibrairieCarte.Carte;
+import LibrairieCarte.SymboleCarte;
 import java.util.ArrayList;
 
 /**
@@ -32,6 +33,11 @@ public class IntelligenceIA implements Intelligence{
     }
 
     @Override
+    public void avertirAtout(SymboleCarte atout){
+    
+    }
+    
+    @Override
     public void avertirCoupAdversaire(Carte carte) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -39,6 +45,10 @@ public class IntelligenceIA implements Intelligence{
     @Override
     public void avertirPiocheAdversaire(Carte pioche, Carte revelee) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public void avertirPioche(boolean ok){
+        
     }
 
     @Override

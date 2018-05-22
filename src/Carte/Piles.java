@@ -6,6 +6,7 @@
 package Carte;
 
 import LibrairieCarte.Carte;
+import LibrairieCarte.SymboleCarte;
 import LibrairieCarte.ValeurCarte;
 import java.util.ArrayList;
 import java.util.Stack;
@@ -41,21 +42,24 @@ public class Piles {
     /**
      * Met à jour la valeur de l'atout, doit être exécuté au début d'un tour. Atout = null si pas d'atout
      */
-    public ValeurCarte calculerAtout(){
-        ValeurCarte max = null;
+    public SymboleCarte calculerAtout(){
+        Carte max = null;
         
         for(Stack<Carte> pile : piles){
-            ValeurCarte val= pile.peek().getValeur(); // ValeurCarte de la carte retournée
+            Carte val= pile.peek(); // ValeurCarte de la carte retournée
             if(max != null){ 
-                if(val.getValeur() > max.getValeur()){ // Si c'est la plus grande ValeurCarte actuelle
+                if(max.compareTo(val) < 0){ // Si c'est la plus grande ValeurCarte actuelle
                     max = val;
                 }
-            } else if(val.getValeur() > ValeurCarte.VALET.getValeur()){ // Si pas encore d'atout mais la carte actuelle est au moins un valet
+            } else if(val.getValeur().getValeur() >= ValeurCarte.DIX.getValeur()){ // Si pas encore d'atout mais la carte actuelle est au moins un valet
                 max = val;
             }
         }
-        
-        return max;
+        if(max != null){
+            return max.getSymbole();
+        } else {
+            return null;
+        }
     }
     
  // <editor-fold  desc="récupération cartes"> 
@@ -93,5 +97,14 @@ public class Piles {
         return visibles;
     }
 // </editor-fold>  
+    
+    public boolean estVide(){
+        for(Stack<Carte> p : piles){
+            if(p.empty()){
+                return true;
+            }
+        }
+        return false;
+    }
     
 }

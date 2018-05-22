@@ -15,6 +15,7 @@ import IA.IAFacile;
 import IA.IAIntermediaire;
 import IA.IADifficile;
 import LibrairieCarte.Carte;
+import LibrairieCarte.SymboleCarte;
 import LibrairieReseau.CodeMessage;
 import LibrairieReseau.Message;
 import LibrairieReseau.MessageString;
@@ -40,7 +41,7 @@ public class Moteur implements Runnable{
     private Couple joueur2;
     
     private Piles piles;
-    private ValeurCarte atout;
+    private SymboleCarte atout;
     private Carte[] pli;
     
     Stack<Carte[]> historique; // Mon interprétation : un coup est représenté par 2 cartes jouées, je les gardes donc dans un tableau à 2 cartes.
@@ -144,6 +145,9 @@ public class Moteur implements Runnable{
             while(!partieFinie()){
                 // Calcul de l'atout
                 this.atout = this.piles.calculerAtout();
+                System.out.println("atout : " + atout);
+                gagnant.getIntelligence().avertirAtout(this.atout);
+                perdant.getIntelligence().avertirAtout(this.atout);
                 
                 // Avertir ordre du tour
                 gagnant.getIntelligence().avertirTour(true);
@@ -154,7 +158,6 @@ public class Moteur implements Runnable{
                 
                 // Avertir l'autre joueur
                 perdant.getIntelligence().avertirCoupAdversaire(carteGagnant);
-                perdant.getIntelligence().avertirTour(true);
                 
                 // Lire le coup du perdant / demande de sauvegarde ou abandon, ou demande annulation par le premier joueur
                 cartePerdant = jouerCarte(perdant);
@@ -181,18 +184,26 @@ public class Moteur implements Runnable{
                 perdant.getIntelligence().avertirDefaitePli();
                 
                 // Pioche
-                gagnant.getIntelligence().avertirTour(true);
-                perdant.getIntelligence().avertirTour(false);
-                System.out.println(gagnant.getJoueur().getPseudo() + " pioche.");
-                pioche = piocherCarte(gagnant);
-                gagnant.getIntelligence().avertirPiocheAdversaire(pioche[0],pioche[1]);
-                perdant.getIntelligence().avertirPiocheAdversaire(pioche[0],pioche[1]);
-                
-                perdant.getIntelligence().avertirTour(true);
-                System.out.println(perdant.getJoueur().getPseudo() + " pioche.");
-                pioche = piocherCarte(perdant);
-                perdant.getIntelligence().avertirPiocheAdversaire(pioche[0],pioche[1]);
-                gagnant.getIntelligence().avertirPiocheAdversaire(pioche[0],pioche[1]);
+                if(!piles.estVide()){
+                    gagnant.getIntelligence().avertirPioche(true);
+                    perdant.getIntelligence().avertirPioche(true);
+                    
+                    gagnant.getIntelligence().avertirTour(true);
+                    perdant.getIntelligence().avertirTour(false);
+                    System.out.println(gagnant.getJoueur().getPseudo() + " pioche.");
+                    pioche = piocherCarte(gagnant);
+                    gagnant.getIntelligence().avertirPiocheAdversaire(pioche[0],pioche[1]);
+                    perdant.getIntelligence().avertirPiocheAdversaire(pioche[0],pioche[1]);
+
+                    perdant.getIntelligence().avertirTour(true);
+                    System.out.println(perdant.getJoueur().getPseudo() + " pioche.");
+                    pioche = piocherCarte(perdant);
+                    perdant.getIntelligence().avertirPiocheAdversaire(pioche[0],pioche[1]);
+                    gagnant.getIntelligence().avertirPiocheAdversaire(pioche[0],pioche[1]);                    
+                } else {
+                    gagnant.getIntelligence().avertirPioche(false);                   
+                    perdant.getIntelligence().avertirPioche(false);
+                }
 
             }
             
@@ -216,12 +227,16 @@ public class Moteur implements Runnable{
      * @return 1 si carte1>carte2, -1 si carte2>carte1
      */
     private int comparerCartes(Carte carte1, Carte carte2){
-        if(carte1.getValeur() == atout && carte2.getValeur() != atout){
+        if(carte1.getSymbole() == atout && carte2.getSymbole() != atout){ // règle de l'atout
             return 1;
-        } else if (carte2.getValeur() == atout && carte1.getValeur() != atout){
+        } else if (carte2.getSymbole() == atout && carte1.getSymbole() != atout){ // règle de l'atout
             return -1;
-        } else {
+        } else if (carte1.getSymbole() != carte2.getSymbole()){ // défausse
+                return 1;
+        } else if(carte1.getSymbole() == carte2.getSymbole()){ // même symbole
             return carte1.compareTo(carte2);
+        } else { // ce cas ne peut pas arriver à cause des 2 conditions précédentes
+            return 0; 
         }
     }
 

@@ -8,6 +8,7 @@ package Moteur;
 import LibrairieReseau.Communication;
 import IA.IA;
 import LibrairieCarte.Carte;
+import LibrairieCarte.SymboleCarte;
 import java.util.ArrayList;
 
 /**
@@ -20,6 +21,8 @@ public interface Intelligence {
 
     public int getPioche();
     
+    public void avertirAtout(SymboleCarte atout);
+    
     public void avertirCoupAdversaire(Carte carte);
     
     public void avertirPiocheAdversaire(Carte pioche, Carte revelee);
@@ -27,6 +30,8 @@ public interface Intelligence {
     public void avertirVictoirePli();
         
     public void avertirDefaitePli();
+    
+    public void avertirPioche(boolean ok);
     
     public void avertirVictoireManche();
     

@@ -22,25 +22,6 @@ public class TestCarte {
     
     
     @Test
-    public void testCouleurs() {
-        Carte coeur = new Carte(ValeurCarte.DIX,SymboleCarte.COEUR);
-        assertEquals(coeur.estNoire(),false);
-        assertEquals(coeur.estRouge(),true);
-        
-        Carte carreau = new Carte(ValeurCarte.DIX,SymboleCarte.CARREAU);
-        assertEquals(carreau.estNoire(),false);
-        assertEquals(carreau.estRouge(),true);
-        
-        Carte pique = new Carte(ValeurCarte.DIX,SymboleCarte.PIQUE);
-        assertEquals(pique.estNoire(),true);
-        assertEquals(pique.estRouge(),false);
-        
-        Carte trefle = new Carte(ValeurCarte.DIX,SymboleCarte.TREFLE);
-        assertEquals(trefle.estNoire(),true);
-        assertEquals(trefle.estRouge(),false);
-    }
-    
-    @Test
     public void testGetters() {
         Carte coeur = new Carte(ValeurCarte.DIX,SymboleCarte.COEUR);
         assertEquals(coeur.getValeur(),ValeurCarte.DIX);

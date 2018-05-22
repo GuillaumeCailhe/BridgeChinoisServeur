@@ -71,6 +71,7 @@ public class Joueur {
         for(int i = 0; i < main.size(); i++){
             if(main.get(i).compareTo(p) > 0){
                 main.add(i,p);
+                break;
             }
         }
         return p;

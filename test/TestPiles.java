@@ -7,6 +7,7 @@
 import Carte.Paquet;
 import Carte.Piles;
 import LibrairieCarte.Carte;
+import LibrairieCarte.SymboleCarte;
 import LibrairieCarte.ValeurCarte;
 import java.util.ArrayList;
 import org.junit.After;
@@ -40,16 +41,16 @@ public class TestPiles {
         assert c1 != c2;
     }
     
-    @Test
+    /*@Test
     public void testAtout(){
         Paquet paquet = new Paquet();
         Piles piles = new Piles(paquet);
         
-        ValeurCarte atout = piles.calculerAtout();
+        SymboleCarte atout = piles.calculerAtout();
         for(int i=0; i<6; i++){
-            assert atout.getValeur() >= piles.recupererCarte(i).getValeur().getValeur();
+            assert atout.getSymbole() >= piles.recupererCarte(i).getSymbole().getSymbole();
         }
-    }
+    }*/
     
     public void testVisibles(){
         Paquet paquet = new Paquet();

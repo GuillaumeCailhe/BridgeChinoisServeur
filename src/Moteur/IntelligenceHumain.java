@@ -6,6 +6,7 @@
 package Moteur;
 
 import LibrairieCarte.Carte;
+import LibrairieCarte.SymboleCarte;
 import LibrairieReseau.CodeMessage;
 import LibrairieReseau.Communication;
 import LibrairieReseau.MessageEntier;
@@ -35,9 +36,19 @@ public class IntelligenceHumain implements Intelligence {
     public int getPioche() {
         attendreMessage();
         MessageEntier msg = (MessageEntier) client.getMessageParCode(CodeMessage.PIOCHER);
+        System.out.println("pioche ok");
         return msg.getDonnees();
     }
 
+    @Override
+    public void avertirAtout(SymboleCarte atout){
+        if(atout != null){
+            client.envoyerEntier(CodeMessage.ATOUT, (byte) atout.getSymbole());
+        } else {
+            client.envoyerEntier(CodeMessage.ATOUT, (byte) 4);
+        }
+    }
+    
     @Override
     public void avertirCoupAdversaire(Carte carte) {
         ArrayList<Carte> arrayCarte = new ArrayList<Carte>();
@@ -51,6 +62,15 @@ public class IntelligenceHumain implements Intelligence {
         arrayCarte.add(pioche);
         arrayCarte.add(revelee);
         client.envoyerCartes(CodeMessage.PIOCHER_ADVERSAIRE,arrayCarte);
+    }
+    
+    @Override
+    public void avertirPioche(boolean ok){
+        if(ok){
+            client.envoyer(CodeMessage.PIOCHER_OK);
+        } else {
+            client.envoyer(CodeMessage.PIOCHER_KO);
+        }
     }
     
     @Override
