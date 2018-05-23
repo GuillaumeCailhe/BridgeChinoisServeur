@@ -24,27 +24,27 @@ public class IntelligenceIA implements Intelligence{
     
     @Override
     public int getCoup() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return ia.prochainCoup();
     }
 
     @Override
     public int getPioche() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return ia.prochainePioche();
     }
 
     @Override
     public void avertirAtout(SymboleCarte atout){
-    
+        ia.informerAtout(atout);
     }
     
     @Override
     public void avertirCoupAdversaire(Carte carte) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ia.informerCoupAdversaire(carte);
     }
 
     @Override
     public void avertirPiocheAdversaire(Carte pioche, Carte revelee) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ia.informerPiocheAdversaire(pioche,revelee);
     }
     
     public void avertirPioche(boolean ok){
@@ -58,32 +58,28 @@ public class IntelligenceIA implements Intelligence{
 
     @Override
     public void avertirTour(boolean oui) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void montrerMain(ArrayList<Carte> main) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ia.informerMain(main);
     }
 
     @Override
     public void montrerPiles(ArrayList<Carte> piles) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ia.informerPiles(piles);
     }
 
     @Override
     public void confirmerCoup(boolean oui) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void avertirVictoirePli() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void avertirDefaitePli() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override

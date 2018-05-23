@@ -70,18 +70,21 @@ public class Lobby implements Runnable{
                         clientsDevantEtreTraites.remove(client);
                         break;
                     case PARTIE_JCFACILE:
+                        client.envoyer(CodeMessage.PARTIE_DEMARRER);
                         moteur = new Moteur(ModeDeJeu.JOUEUR_CONTRE_IA_FACILE, client);
                         t = new Thread(moteur);
                         t.start();  
                         clientsDevantEtreTraites.remove(client);
                         break;
                     case PARTIE_JCINTERMEDIAIRE:
+                        client.envoyer(CodeMessage.PARTIE_DEMARRER);
                         moteur = new Moteur(ModeDeJeu.JOUEUR_CONTRE_IA_INTERMEDIAIRE, client);
                         t = new Thread(moteur);
                         t.start();    
                         clientsDevantEtreTraites.remove(client);
                         break;                     
                     case PARTIE_JCDIFFICILE:
+                        client.envoyer(CodeMessage.PARTIE_DEMARRER);
                         moteur = new Moteur(ModeDeJeu.JOUEUR_CONTRE_IA_DIFFICILE,  client);
                         t = new Thread(moteur);
                         t.start(); 

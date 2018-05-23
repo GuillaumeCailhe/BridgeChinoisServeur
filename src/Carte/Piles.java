@@ -70,7 +70,11 @@ public class Piles {
      */
     public Carte regarderCarte(int indexPile){
         if(indexPile >= 0 && indexPile < 6){
-            return piles.get(indexPile).peek();
+            if(piles.get(indexPile).size() > 0){
+                return piles.get(indexPile).peek();
+            } else {
+                return null;
+            }
         } else {
             throw new Error("Tentative d'accès à la pile d'index: " + indexPile);
         }

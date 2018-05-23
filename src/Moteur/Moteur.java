@@ -267,7 +267,9 @@ public class Moteur implements Runnable{
         
         // Retransmission les pseudos
         c1.envoyerString(CodeMessage.PSEUDO, pseudo2);
-        c2.envoyerString(CodeMessage.PSEUDO, pseudo1);
+        if(mode == ModeDeJeu.JOUEUR_CONTRE_JOUEUR) {
+            c2.envoyerString(CodeMessage.PSEUDO, pseudo1);
+        }
 
         return new String[] {pseudo1, pseudo2};
     }

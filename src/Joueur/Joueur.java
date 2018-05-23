@@ -8,6 +8,7 @@ package Joueur;
 import LibrairieCarte.Carte;
 import Moteur.Moteur;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  *
@@ -68,12 +69,8 @@ public class Joueur {
      */
     public Carte piocherCarte(int indexPile){
         Carte p = moteur.getPiles().recupererCarte(indexPile);
-        for(int i = 0; i < main.size(); i++){
-            if(main.get(i).compareTo(p) > 0){
-                main.add(i,p);
-                break;
-            }
-        }
+        main.add(p);
+        Collections.sort(main);
         return p;
     }
 
