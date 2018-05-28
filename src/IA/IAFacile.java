@@ -7,6 +7,7 @@ package IA;
 
 import LibrairieCarte.Carte;
 import LibrairieCarte.SymboleCarte;
+import LibrairieCarte.ValeurCarte;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -43,7 +44,7 @@ public class IAFacile extends IA {
     }
     
     public int prochainePioche(){
-        Carte max = piles.get(0);
+        Carte max = new Carte(ValeurCarte.DEUX, SymboleCarte.TREFLE);
         for(Carte c : piles){
             if(c != null && max.compareTo(c) < 0){
                 max = c;
