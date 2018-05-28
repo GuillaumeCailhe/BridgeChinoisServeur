@@ -141,11 +141,12 @@ public class Moteur implements Runnable{
            
             this.distribuerCartes();
             
+            // Calcul de l'atout
+            this.atout = this.piles.calculerAtout();
+            System.out.println("atout : " + atout);
+            
             // Boucle principale de la manche
             while(!partieFinie()){
-                // Calcul de l'atout
-                this.atout = this.piles.calculerAtout();
-                System.out.println("atout : " + atout);
                 gagnant.getIntelligence().avertirAtout(this.atout);
                 perdant.getIntelligence().avertirAtout(this.atout);
                 
