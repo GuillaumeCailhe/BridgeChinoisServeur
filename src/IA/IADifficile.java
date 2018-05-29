@@ -22,8 +22,9 @@ public class IADifficile extends IA {
     private ArrayList<Carte> cachee;
     private ArrayList<Carte> main;
     private ArrayList<Carte> piles;
+    private ArrayList<Integer> profondeurPiles;
     private SymboleCarte atout;
-    private SymboleCarte couleurAdversaire;
+    private Carte carteAdversaire;
     
     public IADifficile(){
         this.cachee = new ArrayList<Carte>();
@@ -37,17 +38,47 @@ public class IADifficile extends IA {
     public int prochainCoup(){
         ArrayList<Carte> jouable = new ArrayList<Carte>();
         for(Carte c : main){
-            if(couleurAdversaire == null || c.getSymbole() == couleurAdversaire || c.getSymbole() == atout){
+            if(carteAdversaire == null || c.getSymbole() == carteAdversaire.getSymbole() || c.getSymbole().estAtout()){
                 jouable.add(c);
             }
         }
         
+        
+        
         Carte choix = null;
         
-        if(cachee.size() == 13){
+        if(cachee.size() <= 13){
             // minmax
         } else {
-            
+            if(carteAdversaire == null){ // on joue en premier
+                switch(valeurPile()){
+                    case 0:
+                        choix = jouerPireCarte(jouable);
+                        break;
+                    case 1:
+                        choix = jouerCarteMoyenne(jouable);
+                        break;
+                    case 2: 
+                        choix = jouerMeilleureCarte(jouable);
+                        break;
+                }   
+            } else {
+                switch(valeurPile()){
+                    case 0:
+                        choix = jouerPireCarte(jouable);
+                        break;
+                    case 1:
+                        choix = jouerCarteMoyenne(jouable);
+                        break;
+                    case 2: 
+                        choix = jouerMeilleureCarte(jouable);
+                        if(choix.compareTo(carteAdversaire) < 0){ // Si on perd même en jouant notre meilleure carte, il vaut mieu en jouer une mauvaise
+                            choix = jouerPireCarte(jouable);
+                        }
+                        break;
+                }  
+            }
+
         }
         /*
         Si aucune bonne carte
@@ -60,7 +91,7 @@ public class IADifficile extends IA {
         
         
         //System.out.println(jouable);
-        couleurAdversaire = null;
+        carteAdversaire = null;
         return main.indexOf(choix);
     }
     
@@ -126,24 +157,35 @@ public class IADifficile extends IA {
     
     public void informerMain(ArrayList<Carte> main){
         this.main = main;
+        
+        ArrayList<Carte> retire = new ArrayList<Carte>();
         for(Carte c1 : this.main){
             for(Carte c2 : this.cachee){
                 if(cartesIdentiques(c1,c2)){
-                    this.cachee.remove(c2);
+                    retire.add(c2);
                 }
             }
         }
+        this.cachee.removeAll(retire);
         //System.out.println(main);
     }
     
     public void informerPiles(ArrayList<Carte> piles){
         this.piles = piles;
+        
+        ArrayList<Carte> retire = new ArrayList<Carte>();
         for(Carte c1 : this.piles){
             for(Carte c2 : this.cachee){
                 if(cartesIdentiques(c1,c2)){
-                    this.cachee.remove(c2);
+                    retire.add(c2);
                 }
             }
+        }
+        this.cachee.removeAll(retire);
+        
+        this.profondeurPiles = new ArrayList<Integer>();
+        for(int i = 0; i < 6; i++){
+            profondeurPiles.add(5);
         }
     }
     
@@ -152,7 +194,7 @@ public class IADifficile extends IA {
     }
     
     public void informerCoupAdversaire(Carte carte){
-        couleurAdversaire = carte.getSymbole();
+        carteAdversaire = carte;
     }
     
     @Override
@@ -194,5 +236,95 @@ public class IADifficile extends IA {
     }
 
     
+    /**
+     * 
+     * @return 0 s'il ne faut pas gagner (bonne cartes derrière), 1 si on peut gagner mais qu'il ne faut pas jouer de grosse carte (plusieurs bonnes cartes), 2 s'il faut gagner le pli 
+     */
+    private int valeurPile(){
+        /*
+        Les cartes sont réparties en plusieurs paliers :
+        as de l'atout > valet dame roi de l'atout > autres atout > valet dame roi as non atout > 3-10 non atout > 2 non atout 
+        Palier 1 : le gagner donne un avantage considérable car il permet de gagner un pli à coup sûr
+        Palier 2 : presque sûr de gagner
+        Palier 3 : utile à garder pour la fin de partie
+        Palier 4 : cartes fortes contre les non atouts
+        Palier 5 : permet de ne pas utiliser de bonne cartes
+        Palier 6 : permet d'être sûr de perdre, si une bonne carte se cache derrière. il est bon d'en avoir un peu mais il faut essayer de les utiliser avant la fin de la pioche
+        */
+
+        // Contient les cartes cachées qui sont meilleures que la meilleure carte de la pile
+        ArrayList<Carte> meilleuresQuePiles = new ArrayList<Carte>();
+
+        Carte maxPile = piles.get(0);
+        for(Carte p : piles){
+            if(p.compareTo(maxPile) > 0){
+                maxPile = p;
+            }
+        }
+        
+        if(this.profondeurPiles.get(piles.indexOf(maxPile)) > 1) { // On calcule la probabilité qu'une meilleure carte soit retournée (si c'est la dernière on passe à l'étape suivante)
+            for(Carte c : cachee){
+                if(maxPile.compareTo(c) < 0){
+                    meilleuresQuePiles.add(c);
+                }
+            }
+
+            // Calcule la probabilité que l'on retourne une meilleure carte
+            float proba = meilleuresQuePiles.size() / cachee.size();
+            
+            if(proba == 1){
+                return 0; // IL Y A UNE MEILLEURE CARTE DERRIERE DONC ON VEUT PERDRE
+            } else if (proba >= 0.75){
+                return 1; // IL Y A PROBABLEMENT UNE MEILLEURE CARTE DERRIERE
+            }
+        }
+        
+        ArrayList<Carte> topTier = new ArrayList<Carte>();
+        int tier = 0;
+        for(Carte p : piles){
+            if(topTier.size() == 0){
+                topTier.add(p);
+                tier = calculTier(p);
+            } else if (calculTier(p) > tier){
+                topTier.clear();
+                topTier.add(p);
+                tier = calculTier(p);
+            } else if(calculTier(p) == tier){
+                topTier.add(p);
+            }
+        }
+        
+        if(topTier.size() >= 2){
+            return 1;
+        } else if(tier == 1) {
+            return 2;
+        } else {
+            return 0;
+        }        
+    }
+    
+    private int calculTier(Carte c){
+        if(c.getSymbole().estAtout()){
+            if(c.getValeur() == ValeurCarte.AS){
+                return 1;
+            } else if (c.getValeur().getValeur() >= ValeurCarte.VALET.getValeur()){
+                return 2;
+            } else {
+                return 3;
+            }
+        } else {
+            if(c.getValeur().getValeur() >= ValeurCarte.VALET.getValeur()){
+                return 4;
+            } else if (c.getValeur().getValeur() >= ValeurCarte.TROIS.getValeur()){
+                return 5;
+            } else {
+                return 6;
+            }
+        }
+    }
+
+    private NoeudArbre minMax(){
+        return null;
+    }
     
 }

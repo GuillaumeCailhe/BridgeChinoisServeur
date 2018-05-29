@@ -110,11 +110,11 @@ public class Piles {
 
     public boolean estVide() {
         for (Stack<Carte> p : piles) {
-            if (p.empty()) {
-                return true;
+            if (!p.empty()) {
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
 }
