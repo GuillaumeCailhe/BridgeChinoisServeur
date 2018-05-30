@@ -140,16 +140,7 @@ public class Moteur implements Runnable{
             }
            
             this.distribuerCartes();
-            
-            // Calcul de l'atout
-            this.atout = this.piles.calculerAtout();
-            if(atout != null){
-                this.atout.setAtout(true);
-            }
-            System.out.println("atout : " + atout);
-            Collections.sort(joueur1.getJoueur().getMain());
-            System.out.println(joueur1.getJoueur().getMain());
-            Collections.sort(joueur1.getJoueur().getMain());
+           
             
             // Boucle principale de la manche
             while(!partieFinie()){

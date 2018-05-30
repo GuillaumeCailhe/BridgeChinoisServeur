@@ -60,6 +60,10 @@ public class TestCarte {
         SymboleCarte.CARREAU.setAtout(true);
         assert moy3.compareTo(max) == 1;
         
+        Carte c1 = new Carte(ValeurCarte.ROI, SymboleCarte.PIQUE);
+        Carte c2 = new Carte(ValeurCarte.AS, SymboleCarte.TREFLE);
+        assert c1.compareTo(c2) < 0;
+        
     }
     
     @Test
