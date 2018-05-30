@@ -143,7 +143,13 @@ public class Moteur implements Runnable{
             
             // Calcul de l'atout
             this.atout = this.piles.calculerAtout();
+            if(atout != null){
+                this.atout.setAtout(true);
+            }
             System.out.println("atout : " + atout);
+            Collections.sort(joueur1.getJoueur().getMain());
+            System.out.println(joueur1.getJoueur().getMain());
+            Collections.sort(joueur1.getJoueur().getMain());
             
             // Boucle principale de la manche
             while(!partieFinie()){
@@ -210,7 +216,17 @@ public class Moteur implements Runnable{
             
             // Fin manche
             // Afficher vainqueur de la manche
-            
+            if(gagnant.getJoueur().getScoreManche() > 26){
+                gagnant.getIntelligence().avertirVictoireManche();
+                perdant.getIntelligence().avertirDefaiteManche();
+            } else if(gagnant.getJoueur().getScoreManche() == 26){
+                gagnant.getIntelligence().avertirEgaliteManche();
+                perdant.getIntelligence().avertirEgaliteManche();
+            } else {
+                gagnant.getIntelligence().avertirDefaiteManche();
+                perdant.getIntelligence().avertirVictoireManche();
+            }
+            break;
             // Mettre à jour les manches pour chaque joueur
             
         }
@@ -316,11 +332,20 @@ public class Moteur implements Runnable{
             main1.add(paquet.distribuerUneCarte());
             main2.add(paquet.distribuerUneCarte());
         }
+        
+        // Calcul de l'atout
+        this.atout = this.piles.calculerAtout();
+        if(atout != null){
+            this.atout.setAtout(true);
+        }
+        System.out.println("atout : " + atout);
         Collections.sort(main1);
         Collections.sort(main2);
+        
         joueur1.getJoueur().setMain(main1);
         joueur2.getJoueur().setMain(main2);
         System.out.println("terminé.");
+
         
         // Appel aux fonctions envoyerMain(), envoyerPiles(), et envoyerTour() dans les Intelligences, la partie peut ensuite démarrer
         joueur1.getIntelligence().montrerMain(joueur1.getJoueur().getMain());

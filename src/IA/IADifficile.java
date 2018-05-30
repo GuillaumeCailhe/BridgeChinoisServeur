@@ -36,6 +36,8 @@ public class IADifficile extends IA {
     }
     
     public int prochainCoup(){
+        System.out.println(main);
+        
         ArrayList<Carte> jouable = new ArrayList<Carte>();
         for(Carte c : main){
             if(carteAdversaire == null || c.getSymbole() == carteAdversaire.getSymbole() || c.getSymbole().estAtout()){
@@ -49,17 +51,26 @@ public class IADifficile extends IA {
         
         if(cachee.size() <= 13){
             // minmax
-        } else {
+        } else if (jouable.size() > 0){
             if(carteAdversaire == null){ // on joue en premier
                 switch(valeurPile()){
                     case 0:
+                        System.out.println("l'IA veut perdre");
                         choix = jouerPireCarte(jouable);
                         break;
                     case 1:
+                        System.out.println("l'IA ne tente pas de gagner");
                         choix = jouerCarteMoyenne(jouable);
                         break;
-                    case 2: 
+                    case 2:
                         choix = jouerMeilleureCarte(jouable);
+                        System.out.println("l'IA tente de gagner");
+                        float proba = calculProbaGagner(choix); 
+                        System.out.println("l'IA a une probabilité de " + proba + " de gagner");
+                        if(proba < 0.5){
+                            System.out.println("l'IA a peu de chance de gagner, elle choisit donc de jouer une carte moyenne");
+                            choix = jouerCarteMoyenne(jouable);
+                        }
                         break;
                 }   
             } else {
@@ -68,27 +79,19 @@ public class IADifficile extends IA {
                         choix = jouerPireCarte(jouable);
                         break;
                     case 1:
-                        choix = jouerCarteMoyenne(jouable);
-                        break;
-                    case 2: 
-                        choix = jouerMeilleureCarte(jouable);
-                        if(choix.compareTo(carteAdversaire) < 0){ // Si on perd même en jouant notre meilleure carte, il vaut mieu en jouer une mauvaise
+                        choix = jouerPireCarteGagnante(jouable); // On essaye de gagner de justtesse
+                        if(main.indexOf(choix) >= main.size()/2){ // Si on doit utiliser une bonne carte pour gagner le pli, il vaut mieu perdre
                             choix = jouerPireCarte(jouable);
                         }
                         break;
+                    case 2: 
+                        choix = jouerPireCarteGagnante(jouable);
+                        break;
                 }  
             }
-
+        } else {
+            choix = jouerPireCarte(main);
         }
-        /*
-        Si aucune bonne carte
-            jouerPirecarte()
-        Sinon si 1 bonne carte 
-            jouerMeilleureCarte()
-        Sinon si plusieurs bonnes cartes
-            jouerCarteMoyenne()
-        */
-        
         
         //System.out.println(jouable);
         carteAdversaire = null;
@@ -101,7 +104,7 @@ public class IADifficile extends IA {
         do {
             min = jouable.get(i);
             i++;
-        } while(min.getSymbole() == atout);
+        } while(i < jouable.size() && min.getSymbole() == atout);
         
         if(jouable.indexOf(min) == jouable.size()-1){
             min = jouable.get(0);
@@ -116,7 +119,7 @@ public class IADifficile extends IA {
         do {
             min = jouable.get(i);
             i--;
-        } while(min.getSymbole() != atout);
+        } while(i >= 0 && min.getSymbole() != atout);
         
         if(jouable.indexOf(min) == 0){
             min = jouable.get(jouable.size()-1);
@@ -126,29 +129,47 @@ public class IADifficile extends IA {
     }
     
     /**
-     * Permet de forcer l'adversaire à utiliser une bonne carte pour contrer celle là
+     * 
      * @param jouable
-     * @return Une carte qui est si possible un atout, mais d'une valeur comprise entre 4 et 9, sinon fait appel à jouerPireCarte()
+     * @return Une carte aléatoire qui n'est pas un atout ni un 2 ni un as, sinon la partie carte
      */
     private Carte jouerCarteMoyenne(ArrayList<Carte> jouable){
+        ArrayList<Carte> pasAtoutOu2 = new ArrayList<Carte>();
+        for(Carte c : jouable){
+            if(!c.getSymbole().estAtout() && c.getValeur().getValeur() > ValeurCarte.DEUX.getValeur() && c.getValeur().getValeur() < ValeurCarte.AS.getValeur()){
+                pasAtoutOu2.add(c);
+            }
+        }
+        
+        if(pasAtoutOu2.size() == 0){
+            return jouable.get(0);
+        } else {
+            Random r = new Random();
+            return pasAtoutOu2.get(r.nextInt(pasAtoutOu2.size()));
+        }
+    }
+    
+    private Carte jouerPireCarteGagnante(ArrayList<Carte> jouable){
         Carte min;
         int i = 0;
         do {
             min = jouable.get(i);
             i++;
-        } while(min.getSymbole() != atout || min.getValeur().getValeur() < ValeurCarte.QUATRE.getValeur() );
+        } while(i < jouable.size() && min.compareTo(carteAdversaire) < 0);
         
-        if(jouable.indexOf(min) == jouable.size()-1 || min.getValeur().getValeur() > ValeurCarte.NEUF.getValeur()){
-            min = jouable.get(0);
+        if(jouable.indexOf(min) == jouable.size()-1 && min.compareTo(carteAdversaire) < 0){
+            min = jouerPireCarte(jouable);
         }
         
         return min;
     }
     
     public int prochainePioche(){
-        Carte max = piles.get(0);
+        Carte max = null;
         for(Carte c : piles){
-            if(c != null && max.compareTo(c) < 0){
+            if(max == null && c != null){
+                max = c;
+            } else if(c != null && max.compareTo(c) < 0){
                 max = c;
             }
         }
@@ -257,9 +278,12 @@ public class IADifficile extends IA {
 
         Carte maxPile = piles.get(0);
         for(Carte p : piles){
-            if(p.compareTo(maxPile) > 0){
-                maxPile = p;
+            if(p != null){
+                if(p.compareTo(maxPile) > 0){
+                    maxPile = p;
+                }
             }
+
         }
         
         if(this.profondeurPiles.get(piles.indexOf(maxPile)) > 1) { // On calcule la probabilité qu'une meilleure carte soit retournée (si c'est la dernière on passe à l'étape suivante)
@@ -282,15 +306,17 @@ public class IADifficile extends IA {
         ArrayList<Carte> topTier = new ArrayList<Carte>();
         int tier = 0;
         for(Carte p : piles){
-            if(topTier.size() == 0){
-                topTier.add(p);
-                tier = calculTier(p);
-            } else if (calculTier(p) > tier){
-                topTier.clear();
-                topTier.add(p);
-                tier = calculTier(p);
-            } else if(calculTier(p) == tier){
-                topTier.add(p);
+            if(p !=  null){
+                if(topTier.size() == 0){
+                    topTier.add(p);
+                    tier = calculTier(p);
+                } else if (calculTier(p) > tier){
+                    topTier.clear();
+                    topTier.add(p);
+                    tier = calculTier(p);
+                } else if(calculTier(p) == tier){
+                    topTier.add(p);
+                }
             }
         }
         
@@ -320,6 +346,20 @@ public class IADifficile extends IA {
             } else {
                 return 6;
             }
+        }
+    }
+    
+    private float calculProbaGagner(Carte carte){
+        return calculRecursif(carte,0,0);
+    }
+    
+    private float calculRecursif(Carte carte, int indiceCachee, int i){
+        if(indiceCachee == cachee.size()){
+            return 0;
+        } else if(carte.compareTo(cachee.get(indiceCachee)) < 0){
+            return main.size()/(cachee.size()-i) + (cachee.size()-i-main.size())/cachee.size() * calculRecursif(carte, indiceCachee+1, i+1);
+        } else {
+            return calculRecursif(carte, indiceCachee+1, i);
         }
     }
 

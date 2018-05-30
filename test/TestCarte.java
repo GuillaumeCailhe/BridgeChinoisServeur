@@ -55,7 +55,11 @@ public class TestCarte {
         assert moy2.compareTo(moy3) == 1;
         assert moy3.compareTo(moy4) == 1;
         // On en déduit que moy4 < moy1, donc on doit obtenir -1
-        assert moy4.compareTo(moy1) == -1;    
+        assert moy4.compareTo(moy1) == -1;
+        
+        SymboleCarte.CARREAU.setAtout(true);
+        assert moy3.compareTo(max) == 1;
+        
     }
     
     @Test
